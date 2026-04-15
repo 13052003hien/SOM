@@ -38,6 +38,28 @@ export function DashboardPage() {
 
   return (
     <>
+      <section className="dashboard-hero">
+        <div className="dashboard-hero-glow" aria-hidden="true" />
+        <div className="dashboard-topbar">
+          <span className="dashboard-topbar-pill">Night mode</span>
+          <span className="dashboard-topbar-sep" aria-hidden="true" />
+          <span className="dashboard-topbar-text">Giao diện tối tương phản cao, tối ưu cho theo dõi dòng tiền.</span>
+        </div>
+        <div className="dashboard-hero-content">
+          <div>
+            <p className="dashboard-hero-kicker">WELCOME BACK</p>
+            <h1>Tổng quan tài chính</h1>
+            <p>
+              Theo dõi thu nhập, chi tiêu và cảnh báo ngân sách trong một không gian tối phong cách club.
+            </p>
+          </div>
+          <div className="dashboard-hero-meta">
+            <span>{report ? `Kỳ báo cáo ${report.month}` : "Đang tải kỳ báo cáo"}</span>
+            <strong>{report ? formatVND(report.net) : "..."}</strong>
+          </div>
+        </div>
+      </section>
+
       <PageSection title="Tổng quan tài chính" subtitle="Theo dõi dòng tiền hiện tại và xu hướng theo tháng.">
         <div className="stats-grid">
           {stats.map((item) => (

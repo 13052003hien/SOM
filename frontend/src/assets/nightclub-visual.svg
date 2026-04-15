@@ -1,0 +1,54 @@
+<svg width="720" height="900" viewBox="0 0 720 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="120" y1="80" x2="620" y2="820" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#090B1C"/>
+      <stop offset="1" stop-color="#16102F"/>
+    </linearGradient>
+    <linearGradient id="pink" x1="220" y1="120" x2="540" y2="700" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF7AD9"/>
+      <stop offset="1" stop-color="#C15DFC"/>
+    </linearGradient>
+    <linearGradient id="skin" x1="220" y1="220" x2="470" y2="560" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFD7C2"/>
+      <stop offset="1" stop-color="#F6A6C0"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(360 450) rotate(90) scale(280 180)">
+      <stop stop-color="#FF6BD6" stop-opacity="0.7"/>
+      <stop offset="1" stop-color="#FF6BD6" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blur" x="0" y="0" width="720" height="900" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+  </defs>
+  <rect width="720" height="900" rx="40" fill="url(#bg)"/>
+  <circle cx="570" cy="180" r="140" fill="url(#pink)" opacity="0.18" filter="url(#blur)"/>
+  <circle cx="165" cy="170" r="110" fill="#C15DFC" opacity="0.16" filter="url(#blur)"/>
+  <circle cx="500" cy="680" r="180" fill="#FF6BD6" opacity="0.14" filter="url(#blur)"/>
+  <circle cx="360" cy="470" r="220" fill="url(#glow)"/>
+
+  <g opacity="0.25">
+    <path d="M70 780C180 700 280 690 360 730C440 770 540 772 650 720" stroke="#F8FAFC" stroke-width="2" stroke-dasharray="8 12"/>
+    <path d="M100 120H620" stroke="#F8FAFC" stroke-width="1" opacity="0.2"/>
+    <path d="M100 170H590" stroke="#F8FAFC" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <g transform="translate(155 185)">
+    <rect x="0" y="0" width="410" height="560" rx="28" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.08)"/>
+    <path d="M90 90C118 50 166 32 214 32C280 32 324 67 350 118C372 162 381 233 370 296C360 354 330 398 283 432C226 473 160 486 108 464C46 438 24 372 22 306C20 230 43 146 90 90Z" fill="url(#pink)" opacity="0.22"/>
+    <path d="M118 108C148 62 193 40 244 40C300 40 347 70 370 120C390 160 392 221 381 270C367 336 326 391 266 427C203 465 137 470 91 446C41 420 22 357 23 294C24 226 46 159 118 108Z" fill="#0B1024"/>
+    <path d="M144 102C176 72 212 58 249 58C286 58 322 73 347 103C372 133 382 171 380 216C378 263 364 308 338 350C310 395 269 427 224 439C180 451 140 445 111 426C82 407 66 377 62 338C57 287 68 233 95 190C113 161 125 121 144 102Z" fill="url(#skin)"/>
+    <path d="M115 190C133 130 177 86 242 86C303 86 350 122 365 180C378 232 364 296 339 349C318 392 279 418 233 428C184 438 140 432 112 404C84 376 75 327 82 277C88 242 102 213 115 190Z" fill="#1A1233"/>
+    <path d="M137 117C154 82 180 61 219 55C272 47 318 61 345 98C370 130 373 169 366 204C361 227 352 240 343 255C332 273 338 305 327 326C311 357 288 377 260 387C221 401 183 395 158 375C130 352 114 319 108 281C102 242 108 194 137 117Z" fill="#2E174D"/>
+    <path d="M201 170C215 158 236 152 258 152C283 152 305 160 321 173" stroke="#F8FAFC" stroke-opacity="0.22" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="210" cy="214" r="8" fill="#F8FAFC" opacity="0.6"/>
+    <circle cx="288" cy="214" r="8" fill="#F8FAFC" opacity="0.6"/>
+    <path d="M210 270C234 286 257 286 281 270" stroke="#F8FAFC" stroke-opacity="0.45" stroke-width="8" stroke-linecap="round"/>
+    <path d="M172 500C191 454 232 434 275 434C321 434 359 456 378 495" stroke="#C15DFC" stroke-width="12" stroke-linecap="round" opacity="0.7"/>
+    <path d="M54 500C98 532 152 548 209 548C284 548 344 522 393 476" stroke="#FF6BD6" stroke-width="16" stroke-linecap="round" opacity="0.2"/>
+  </g>
+
+  <g opacity="0.9">
+    <rect x="80" y="820" width="560" height="16" rx="8" fill="#F8FAFC" opacity="0.08"/>
+    <rect x="145" y="852" width="430" height="10" rx="5" fill="#F8FAFC" opacity="0.08"/>
+  </g>
+</svg>
