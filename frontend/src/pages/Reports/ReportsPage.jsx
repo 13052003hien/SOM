@@ -77,74 +77,145 @@ export function ReportsPage() {
       </PageSection>
 
       <PageSection title="Thống kê theo danh mục" subtitle="Phân bố chi tiêu theo danh mục">
-        <div className="table-wrap">
-          <table className="simple-table">
-            <thead>
-              <tr>
-                <th>Danh mục</th>
-                <th>Loại</th>
-                <th>Tổng</th>
-              </tr>
-            </thead>
-            <tbody>
-              {category?.breakdown?.map((item) => (
-                <tr key={item.category_id}>
-                  <td>{item.category_name}</td>
-                  <td>{getTypeLabel(item.type)}</td>
-                  <td>{formatVND(item.total)}</td>
-                </tr>
+        {category?.breakdown?.length ? (
+          <div className="report-data-wrap">
+            <div className="table-wrap desktop-report-table">
+              <table className="simple-table">
+                <thead>
+                  <tr>
+                    <th>Danh mục</th>
+                    <th>Loại</th>
+                    <th>Tổng</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {category.breakdown.map((item) => (
+                    <tr key={item.category_id}>
+                      <td>{item.category_name}</td>
+                      <td>{getTypeLabel(item.type)}</td>
+                      <td>{formatVND(item.total)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="mobile-report-list">
+              {category.breakdown.map((item) => (
+                <article key={`category-${item.category_id}`} className="mobile-report-card">
+                  <header>
+                    <strong>{item.category_name}</strong>
+                    <span className={`type-badge ${item.type === "income" ? "type-badge-income" : "type-badge-expense"}`}>
+                      {getTypeLabel(item.type)}
+                    </span>
+                  </header>
+                  <p>
+                    <span>Tổng</span>
+                    <strong>{formatVND(item.total)}</strong>
+                  </p>
+                </article>
               ))}
-            </tbody>
-          </table>
-        </div>
+            </div>
+          </div>
+        ) : (
+          <p>Không có dữ liệu danh mục trong tháng này.</p>
+        )}
       </PageSection>
 
       <PageSection title="Dữ liệu biểu đồ tròn" subtitle="Cấu trúc dữ liệu chuẩn cho Pie chart">
-        <div className="table-wrap">
-          <table className="simple-table">
-            <thead>
-              <tr>
-                <th>Nhãn</th>
-                <th>Giá trị</th>
-                <th>Tỷ lệ</th>
-              </tr>
-            </thead>
-            <tbody>
-              {monthly?.charts?.pie?.map((item) => (
-                <tr key={item.id}>
-                  <td>{item.label}</td>
-                  <td>{formatVND(item.value)}</td>
-                  <td>{item.percentage}%</td>
-                </tr>
+        {monthly?.charts?.pie?.length ? (
+          <div className="report-data-wrap">
+            <div className="table-wrap desktop-report-table">
+              <table className="simple-table">
+                <thead>
+                  <tr>
+                    <th>Nhãn</th>
+                    <th>Giá trị</th>
+                    <th>Tỷ lệ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {monthly.charts.pie.map((item) => (
+                    <tr key={item.id}>
+                      <td>{item.label}</td>
+                      <td>{formatVND(item.value)}</td>
+                      <td>{item.percentage}%</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="mobile-report-list">
+              {monthly.charts.pie.map((item) => (
+                <article key={`pie-${item.id}`} className="mobile-report-card">
+                  <header>
+                    <strong>{item.label}</strong>
+                    <span>{item.percentage}%</span>
+                  </header>
+                  <p>
+                    <span>Giá trị</span>
+                    <strong>{formatVND(item.value)}</strong>
+                  </p>
+                </article>
               ))}
-            </tbody>
-          </table>
-        </div>
+            </div>
+          </div>
+        ) : (
+          <p>Không có dữ liệu biểu đồ tròn trong tháng này.</p>
+        )}
       </PageSection>
 
       <PageSection title="Dữ liệu biểu đồ cột" subtitle="Cấu trúc dữ liệu chuẩn cho Bar chart theo ngày">
-        <div className="table-wrap">
-          <table className="simple-table">
-            <thead>
-              <tr>
-                <th>Ngày</th>
-                <th>Thu nhập</th>
-                <th>Chi tiêu</th>
-                <th>Cân đối</th>
-              </tr>
-            </thead>
-            <tbody>
-              {monthly?.charts?.bar?.map((item) => (
-                <tr key={item.label}>
-                  <td>{item.label}</td>
-                  <td>{formatVND(item.income)}</td>
-                  <td>{formatVND(item.expense)}</td>
-                  <td>{formatVND(item.net)}</td>
-                </tr>
+        {monthly?.charts?.bar?.length ? (
+          <div className="report-data-wrap">
+            <div className="table-wrap desktop-report-table">
+              <table className="simple-table">
+                <thead>
+                  <tr>
+                    <th>Ngày</th>
+                    <th>Thu nhập</th>
+                    <th>Chi tiêu</th>
+                    <th>Cân đối</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {monthly.charts.bar.map((item) => (
+                    <tr key={item.label}>
+                      <td>{item.label}</td>
+                      <td>{formatVND(item.income)}</td>
+                      <td>{formatVND(item.expense)}</td>
+                      <td>{formatVND(item.net)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="mobile-report-list">
+              {monthly.charts.bar.map((item) => (
+                <article key={`bar-${item.label}`} className="mobile-report-card">
+                  <header>
+                    <strong>{item.label}</strong>
+                    <span>{formatVND(item.net)}</span>
+                  </header>
+                  <div className="mobile-report-grid">
+                    <p>
+                      <span>Thu nhập</span>
+                      <strong>{formatVND(item.income)}</strong>
+                    </p>
+                    <p>
+                      <span>Chi tiêu</span>
+                      <strong>{formatVND(item.expense)}</strong>
+                    </p>
+                  </div>
+                </article>
               ))}
-            </tbody>
-          </table>
-        </div>
+            </div>
+          </div>
+        ) : (
+          <p>Không có dữ liệu biểu đồ cột trong tháng này.</p>
+        )}
       </PageSection>
     </>
   );
