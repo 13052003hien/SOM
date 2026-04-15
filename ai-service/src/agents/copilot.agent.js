@@ -170,13 +170,21 @@ function inferTransactionType(loweredPrompt) {
 
 function inferSimpleDecision(prompt) {
   const lowered = prompt.toLowerCase();
+  const normalized = lowered.normalize("NFD").replace(/\p{Diacritic}/gu, "");
 
-  if (includesAny(lowered, REPORT_KEYWORDS)) {
-    return { skill: "getReport", args: { reportType: "monthly" } };
+  if (includesAny(lowered, ANALYZE_KEYWORDS) || includesAny(normalized, ["phan tich", "so sanh", "xu huong", "bien dong"])) {
+    return { skill: "analyzeSpending", args: {} };
   }
 
-  if (includesAny(lowered, ANALYZE_KEYWORDS)) {
-    return { skill: "analyzeSpending", args: {} };
+  const isReportQuestion = (
+    includesAny(normalized, ["bao cao", "report", "thang nay", "thang truoc", "bao nhieu", "tong chi", "tong thu", "so voi"]) &&
+    includesAny(normalized, ["chi", "thu", "chi tieu", "thu nhap", "an uong", "xang", "danh muc", "danh muc nao"])
+  );
+
+  if (includesAny(lowered, REPORT_KEYWORDS) || isReportQuestion) {
+    const reportType = includesAny(normalized, ["danh muc", "danh muc nao", "theo danh muc"]) ? "category" : "monthly";
+    const type = includesAny(normalized, ["thu nhap"]) ? "income" : includesAny(normalized, ["chi", "chi tieu", "an uong", "xang"]) ? "expense" : undefined;
+    return { skill: "getReport", args: { reportType, type } };
   }
 
   return {

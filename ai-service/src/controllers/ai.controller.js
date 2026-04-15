@@ -20,6 +20,7 @@ export async function runCopilotController(req, res) {
     return res.json({
       success: true,
       data: result.data,
+      context: result.context || null,
       assistant: result.assistant,
       meta: {
         skill: result.meta?.skill || "unknown",

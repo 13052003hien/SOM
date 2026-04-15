@@ -23,6 +23,11 @@ function formatVND(amount) {
   return `${new Intl.NumberFormat("vi-VN").format(Math.round(numericAmount))} đ`;
 }
 
+function toNumber(value) {
+  const numericValue = Number(value);
+  return Number.isFinite(numericValue) ? numericValue : 0;
+}
+
 function formatDateVN(dateString) {
   if (!dateString) return "";
   const [year, month, day] = String(dateString).slice(0, 10).split("-").map(Number);
@@ -83,6 +88,23 @@ function prettifyVietnameseLabel(value) {
   ]);
 
   return labelMap.get(normalized) || String(value || "");
+}
+
+function formatDeltaLabel(delta) {
+  const numericDelta = toNumber(delta);
+  if (numericDelta === 0) return "không thay đổi";
+  if (numericDelta > 0) return `tăng ${formatVND(numericDelta)}`;
+  return `giảm ${formatVND(Math.abs(numericDelta))}`;
+}
+
+function pickTopItem(items = [], labelKeys = ["category_name", "label", "name"], valueKeys = ["total", "value", "amount"]) {
+  if (!Array.isArray(items) || !items.length) return null;
+
+  return items.reduce((best, item) => {
+    const currentValue = valueKeys.reduce((sum, key) => sum || toNumber(item?.[key]), 0);
+    const bestValue = best ? valueKeys.reduce((sum, key) => sum || toNumber(best?.[key]), 0) : -1;
+    return currentValue > bestValue ? item : best;
+  }, null);
 }
 
 function safeJsonParse(rawText) {
@@ -158,9 +180,104 @@ async function buildNaturalTransactionAssistant({ data, context }) {
   };
 }
 
+function buildMonthlyReportAssistant(data) {
+  const monthLabel = data?.month ? `tháng ${String(data.month).slice(5, 7)}/${String(data.month).slice(0, 4)}` : "tháng này";
+  const income = toNumber(data?.totalIncome);
+  const expense = toNumber(data?.totalExpense);
+  const net = toNumber(data?.net);
+  const topExpense = pickTopItem(data?.charts?.pie || [], ["label"], ["value"]);
+  const budgetAlerts = Array.isArray(data?.budget?.alerts) ? data.budget.alerts.length : 0;
+
+  return {
+    title: `Báo cáo ${monthLabel}`,
+    summary:
+      income || expense
+        ? `Trong ${monthLabel}, bạn thu ${formatVND(income)} và chi ${formatVND(expense)}, cân đối ${net >= 0 ? "dư" : "âm"} ${formatVND(Math.abs(net))}.`
+        : `Đã tổng hợp báo cáo chi tiêu cho ${monthLabel}.`,
+    highlights: [
+      `Thu nhập: ${formatVND(income)}`,
+      `Chi tiêu: ${formatVND(expense)}`,
+      `Cân đối: ${net >= 0 ? "dư" : "âm"} ${formatVND(Math.abs(net))}`,
+      topExpense?.label ? `Danh mục nổi bật: ${prettifyVietnameseLabel(topExpense.label)} (${formatVND(topExpense.value)})` : "Danh mục nổi bật: chưa có dữ liệu"
+    ],
+    suggestions: [
+      budgetAlerts
+        ? `Bạn đang có ${budgetAlerts} cảnh báo ngân sách, hãy xem phần cảnh báo để tối ưu chi tiêu.`
+        : "Chưa có cảnh báo ngân sách trong tháng này.",
+      "Hỏi AI: phân tích chi tiêu tháng này so với tháng trước.",
+      "Mở báo cáo theo danh mục để xem nhóm chi nhiều nhất."
+    ]
+  };
+}
+
+function buildCategoryReportAssistant(data) {
+  const breakdown = Array.isArray(data?.breakdown) ? data.breakdown : [];
+  const typeLabel = data?.type === "income" ? "thu nhập" : data?.type === "expense" ? "chi tiêu" : "giao dịch";
+  const topCategory = pickTopItem(breakdown, ["category_name", "name", "label"], ["total", "value", "amount"]);
+
+  return {
+    title: `Báo cáo danh mục ${typeLabel}`,
+    summary: breakdown.length
+      ? `Đã tổng hợp ${breakdown.length} danh mục ${typeLabel}.`
+      : `Chưa có dữ liệu danh mục ${typeLabel}.`,
+    highlights: [
+      `Tổng số danh mục: ${breakdown.length}`,
+      topCategory?.category_name || topCategory?.name ? `Danh mục cao nhất: ${prettifyVietnameseLabel(topCategory.category_name || topCategory.name)}` : "Danh mục cao nhất: chưa có dữ liệu",
+      topCategory?.total != null ? `Giá trị lớn nhất: ${formatVND(topCategory.total)}` : "Giá trị lớn nhất: chưa có dữ liệu"
+    ],
+    suggestions: [
+      "Hỏi AI: phân tích danh mục nào đang chiếm tỷ trọng lớn nhất.",
+      "Mở báo cáo tháng để xem xu hướng theo thời gian."
+    ]
+  };
+}
+
+function buildAnalysisAssistant(data) {
+  const current = data?.current || {};
+  const comparison = data?.comparison || {};
+  const currentIncome = toNumber(current.totalIncome);
+  const currentExpense = toNumber(current.totalExpense);
+  const incomeDelta = toNumber(comparison.incomeDelta);
+  const expenseDelta = toNumber(comparison.expenseDelta);
+  const netDelta = incomeDelta - expenseDelta;
+
+  return {
+    title: "Phân tích chi tiêu",
+    summary:
+      comparison?.previousMonth
+        ? `So với tháng trước, chi tiêu ${expenseDelta === 0 ? "không đổi" : expenseDelta > 0 ? `tăng ${formatVND(expenseDelta)}` : `giảm ${formatVND(Math.abs(expenseDelta))}`}.`
+        : "Đã phân tích xu hướng chi tiêu của tháng hiện tại.",
+    highlights: [
+      `Thu nhập tháng này: ${formatVND(currentIncome)}`,
+      `Chi tiêu tháng này: ${formatVND(currentExpense)}`,
+      `Biến động thu nhập: ${formatDeltaLabel(incomeDelta)}`,
+      `Biến động chi tiêu: ${formatDeltaLabel(expenseDelta)}`
+    ],
+    suggestions: [
+      "Xem báo cáo theo danh mục để biết nhóm chi nhiều nhất.",
+      `Cân đối tháng này thay đổi ${formatDeltaLabel(netDelta)} so với kỳ trước.`,
+      "Thử hỏi AI: gợi ý cắt giảm chi phí tháng tới."
+    ]
+  };
+}
+
 async function buildAssistantView({ prompt, skill, data, context }) {
   if (skill === "createTransaction") {
     return buildNaturalTransactionAssistant({ data, context });
+  }
+
+  if (skill === "getReport") {
+    if (data?.breakdown) {
+      return buildCategoryReportAssistant(data);
+    }
+
+    if (data?.totalIncome !== undefined || data?.totalExpense !== undefined) {
+      return buildMonthlyReportAssistant(data);
+    }
+  }
+
+  if (skill === "analyzeSpending") {
+    return buildAnalysisAssistant(data);
   }
 
   const systemPrompt = [

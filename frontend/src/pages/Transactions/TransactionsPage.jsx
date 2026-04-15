@@ -16,6 +16,12 @@ function getTypeLabel(type) {
   return type === "income" ? "Thu nhập" : "Chi tiêu";
 }
 
+function formatDisplayDate(value) {
+  const [year, month, day] = String(value || "").slice(0, 10).split("-");
+  if (!year || !month || !day) return String(value || "");
+  return `${day}/${month}/${year}`;
+}
+
 export function TransactionsPage() {
   const toast = useToast();
   const [rows, setRows] = useState([]);
@@ -218,53 +224,91 @@ export function TransactionsPage() {
 
       <PageSection title="Danh sách giao dịch" subtitle="Danh sách giao dịch có phân trang">
         {rows.length ? (
-          <div className="table-wrap">
-            <table className="simple-table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Ví</th>
-                  <th>Danh mục</th>
-                  <th>Loại</th>
-                  <th>Số tiền</th>
-                  <th>Ngày</th>
-                  <th>Ghi chú</th>
-                  <th>Thao tác</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((row) => (
-                  <tr key={row.id} className={deletingIds.includes(row.id) ? "row-deleting" : ""}>
-                    <td>{row.id}</td>
-                    <td>{walletNameById.get(row.wallet_id) || `#${row.wallet_id}`}</td>
-                    <td>{categoryNameById.get(row.category_id) || `#${row.category_id}`}</td>
-                    <td>
-                      <span className={`type-badge ${row.type === "income" ? "type-badge-income" : "type-badge-expense"}`}>
-                        {getTypeLabel(row.type)}
-                      </span>
-                    </td>
-                    <td>{formatVND(row.amount)}</td>
-                    <td>{String(row.date).slice(0, 10)}</td>
-                    <td>{row.note}</td>
-                    <td>
-                      <div className="crud-item-actions">
-                        <button type="button" className="secondary-button" onClick={() => startEdit(row)}>
-                          Sửa
-                        </button>
-                        <button
-                          type="button"
-                          className="danger-button"
-                          disabled={deletingIds.includes(row.id)}
-                          onClick={() => handleDelete(row.id)}
-                        >
-                          Xóa
-                        </button>
-                      </div>
-                    </td>
+          <div className="transaction-list-wrap">
+            <div className="table-wrap desktop-transaction-table">
+              <table className="simple-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Ví</th>
+                    <th>Danh mục</th>
+                    <th>Loại</th>
+                    <th>Số tiền</th>
+                    <th>Ngày</th>
+                    <th>Ghi chú</th>
+                    <th>Thao tác</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {rows.map((row) => (
+                    <tr key={row.id} className={deletingIds.includes(row.id) ? "row-deleting" : ""}>
+                      <td>{row.id}</td>
+                      <td>{walletNameById.get(row.wallet_id) || `#${row.wallet_id}`}</td>
+                      <td>{categoryNameById.get(row.category_id) || `#${row.category_id}`}</td>
+                      <td>
+                        <span className={`type-badge ${row.type === "income" ? "type-badge-income" : "type-badge-expense"}`}>
+                          {getTypeLabel(row.type)}
+                        </span>
+                      </td>
+                      <td>{formatVND(row.amount)}</td>
+                      <td>{String(row.date).slice(0, 10)}</td>
+                      <td>{row.note}</td>
+                      <td>
+                        <div className="crud-item-actions">
+                          <button type="button" className="secondary-button" onClick={() => startEdit(row)}>
+                            Sửa
+                          </button>
+                          <button
+                            type="button"
+                            className="danger-button"
+                            disabled={deletingIds.includes(row.id)}
+                            onClick={() => handleDelete(row.id)}
+                          >
+                            Xóa
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="mobile-transaction-list">
+              {rows.map((row) => (
+                <article key={row.id} className={`mobile-transaction-card ${deletingIds.includes(row.id) ? "row-deleting" : ""}`}>
+                  <header>
+                    <strong>#{row.id}</strong>
+                    <span className={`type-badge ${row.type === "income" ? "type-badge-income" : "type-badge-expense"}`}>
+                      {getTypeLabel(row.type)}
+                    </span>
+                  </header>
+
+                  <div className="mobile-transaction-meta">
+                    <p><span>Ví</span><strong>{walletNameById.get(row.wallet_id) || `#${row.wallet_id}`}</strong></p>
+                    <p><span>Danh mục</span><strong>{categoryNameById.get(row.category_id) || `#${row.category_id}`}</strong></p>
+                    <p><span>Ngày</span><strong>{formatDisplayDate(row.date)}</strong></p>
+                    <p><span>Số tiền</span><strong>{formatVND(row.amount)}</strong></p>
+                  </div>
+
+                  {row.note ? <p className="mobile-transaction-note">{row.note}</p> : null}
+
+                  <div className="crud-item-actions">
+                    <button type="button" className="secondary-button" onClick={() => startEdit(row)}>
+                      Sửa
+                    </button>
+                    <button
+                      type="button"
+                      className="danger-button"
+                      disabled={deletingIds.includes(row.id)}
+                      onClick={() => handleDelete(row.id)}
+                    >
+                      Xóa
+                    </button>
+                  </div>
+                </article>
+              ))}
+            </div>
           </div>
         ) : (
           <EmptyState

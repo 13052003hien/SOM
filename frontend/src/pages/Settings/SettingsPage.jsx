@@ -2,6 +2,99 @@ import { useState } from "react";
 import { PageSection } from "../../components/common/PageSection";
 import { askAIAssistant } from "../../services/ai-assistant.service";
 import { useToast } from "../../store/toast/toast.store";
+import { StatCard } from "../../components/ui/StatCard";
+import { formatVND } from "../../utils/formatters";
+
+function formatISODateVN(value) {
+  if (!value) return "Không rõ";
+  const [year, month, day] = String(value).slice(0, 10).split("-");
+  if (!year || !month || !day) return String(value);
+  return `${day}/${month}/${year}`;
+}
+
+function prettifyLabel(value) {
+  const normalized = String(value || "")
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLowerCase()
+    .trim();
+
+  const map = new Map([
+    ["quan cafe", "quán cafe"],
+    ["ca phe", "cà phê"],
+    ["cafe", "cafe"],
+    ["sinh hoat", "sinh hoạt"],
+    ["di lam", "đi làm"],
+    ["xang xe", "xăng xe"],
+    ["xang", "xăng"],
+    ["tien mat", "tiền mặt"],
+    ["ngan hang", "ngân hàng"],
+    ["thu nhap", "thu nhập"],
+    ["chi tieu", "chi tiêu"],
+    ["an trua", "ăn trưa"],
+    ["an sang", "ăn sáng"],
+    ["an toi", "ăn tối"],
+    ["an uong", "ăn uống"]
+  ]);
+
+  return map.get(normalized) || String(value || "");
+}
+
+function getTransactionCards(response) {
+  const context = response?.context;
+  if (!context) return [];
+
+  return [
+    { label: "Loại giao dịch", value: context.transactionType === "income" ? "Thu nhập" : "Chi tiêu" },
+    { label: "Ví", value: prettifyLabel(context.walletName) || "Không rõ" },
+    { label: "Danh mục", value: prettifyLabel(context.categoryName) || "Không rõ" },
+    { label: "Ngày", value: formatISODateVN(context.transactionDate) },
+    { label: "Số tiền", value: formatVND(context.amount) }
+  ];
+}
+
+function getInsightCards(response) {
+  const skill = response?.meta?.skill;
+  const data = response?.data || {};
+
+  if (skill === "getReport") {
+    if (data?.totalIncome !== undefined || data?.totalExpense !== undefined) {
+      const topCategory = Array.isArray(data?.charts?.pie) && data.charts.pie.length ? data.charts.pie[0] : null;
+
+      return [
+        { label: "Thu nhập", value: formatVND(data.totalIncome || 0), helper: `Kỳ ${data.month || "hiện tại"}` },
+        { label: "Chi tiêu", value: formatVND(data.totalExpense || 0), helper: `Kỳ ${data.month || "hiện tại"}` },
+        { label: "Cân đối", value: formatVND(data.net || 0), helper: data.net >= 0 ? "Dư ngân sách" : "Âm ngân sách" },
+        { label: "Cảnh báo", value: String(data?.budget?.exceededBudgets || 0), helper: `Tổng ${data?.budget?.totalBudgets || 0} ngân sách` },
+        { label: "Danh mục nổi bật", value: topCategory?.label || "Chưa có", helper: topCategory ? `${topCategory.percentage}% chi tiêu` : "Chưa có dữ liệu" }
+      ];
+    }
+
+    if (Array.isArray(data?.breakdown)) {
+      const top = data.breakdown[0];
+
+      return [
+        { label: "Số danh mục", value: String(data.breakdown.length), helper: `Kỳ ${data.month || "hiện tại"}` },
+        { label: "Loại báo cáo", value: data.type === "income" ? "Thu nhập" : data.type === "expense" ? "Chi tiêu" : "Tất cả", helper: "Theo danh mục" },
+        { label: "Danh mục nổi bật", value: top?.category_name || "Chưa có", helper: top ? formatVND(top.total || 0) : "Chưa có dữ liệu" }
+      ];
+    }
+  }
+
+  if (skill === "analyzeSpending") {
+    const current = data?.current || {};
+    const comparison = data?.comparison || {};
+
+    return [
+      { label: "Thu nhập tháng này", value: formatVND(current.totalIncome || 0), helper: current.month || "Hiện tại" },
+      { label: "Chi tiêu tháng này", value: formatVND(current.totalExpense || 0), helper: current.month || "Hiện tại" },
+      { label: "Tăng/Giảm thu nhập", value: formatVND(comparison.incomeDelta || 0), helper: comparison.previousMonth ? `${comparison.previousMonth} → ${comparison.month}` : "So sánh kỳ trước" },
+      { label: "Tăng/Giảm chi tiêu", value: formatVND(comparison.expenseDelta || 0), helper: comparison.previousMonth ? `${comparison.previousMonth} → ${comparison.month}` : "So sánh kỳ trước" }
+    ];
+  }
+
+  return [];
+}
 
 export function SettingsPage() {
   const toast = useToast();
@@ -74,6 +167,25 @@ export function SettingsPage() {
             <p className="ai-result-skill">
               Skill: {response?.meta?.skill || "unknown"} | Engine: {response?.meta?.provider || "heuristic"}
             </p>
+
+            {getTransactionCards(response).length ? (
+              <div className="ai-context-grid">
+                {getTransactionCards(response).map((item) => (
+                  <div key={item.label} className="ai-context-card">
+                    <span>{item.label}</span>
+                    <strong>{item.value}</strong>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+
+            {getInsightCards(response).length ? (
+              <div className="stats-grid ai-insight-kpi-grid">
+                {getInsightCards(response).map((item) => (
+                  <StatCard key={item.label} label={item.label} value={item.value} helper={item.helper} />
+                ))}
+              </div>
+            ) : null}
 
             {response?.assistant ? (
               <div className="ai-insight-panel">
