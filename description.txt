@@ -1,0 +1,178 @@
+THIẾT KẾ WEB QUẢN LÝ CHI TIÊU
+
+Mục tiêu
+Thiết kế và xây dựng một web app quản lý chi tiêu cá nhân có thể mở rộng nhiều user, với AI tích hợp để hỗ trợ nhập liệu và phân tích.
+
+Yêu cầu tổng thể
+
+Xây dựng một hệ thống gồm:
+Frontend: Reactjs (responsive, dashboard chuyên nghiệp)
+Backend: Nodejs (Express)
+Database: MySQL
+Có authentication (JWT hoặc session)
+Deploy online (production-ready)
+
+User & authentication
+Đăng ký / đăng nhập
+JWT authentication
+Mỗi user có dữ liệu riêng
+Có thể mở rộng multi-user
+
+Transaction (Giao dịch)
+Mỗi transaction gồm:
+amount (number)
+type (income / expense)
+category_id
+date
+note
+wallet_id
+
+Wallet (Ví / tài khoản)
+User có thể tạo nhiều wallet:
+tiền mặt
+ngân hàng
+CRUD wallet
+Hiển thị số dư từng ví
+
+Category
+User có thể:
+tạo
+sửa
+xoá category
+Phân loại:
+income
+expense
+
+Báo cáo & thống kê
+Implement:
+Tổng thu / chi theo tháng
+Biểu đồ:
+Pie chart (theo category)
+Bar chart (theo thời gian)
+So sánh tháng trước vs tháng hiện tại
+Thống kê theo category
+
+Budget (Ngân sách)
+User có thể:
+set budget theo category / tháng
+Hệ thống:
+cảnh báo khi vượt ngân sách
+
+AI Integration 
+Feature cần có:
+1. Nhập chi tiêu bằng ngôn ngữ tự nhiên
+
+Ví dụ:"Hôm nay ăn trưa 50k"
+
+→ AI phải:
+parse:
+amount
+category
+date
+gọi API tạo transaction
+
+2. Hỏi đáp báo cáo
+Ví dụ: "Tháng này tôi tiêu bao nhiêu cho ăn uống?"
+→ AI:
+gọi API report
+trả lời dạng text
+
+3. Phân tích chi tiêu
+So sánh tháng
+Detect tăng/giảm bất thường
+
+4. Gợi ý tiết kiệm
+Dựa trên pattern chi tiêu
+
+Import / Export
+
+Import Excel:
+upload file
+parse và insert transaction
+
+Export Excel:
+download theo filter
+
+UI/UX
+Dashboard chuyên nghiệp
+Responsive (mobile + desktop)
+Dark mode
+
+Các màn:
+Dashboard
+Transactions
+Wallet
+Category
+Reports
+Settings
+
+Database Design (MySQL)
+users
+id
+email
+password
+wallets
+id
+user_id
+name
+balance
+categories
+id
+user_id
+name
+type
+transactions
+id
+user_id
+wallet_id
+category_id
+amount
+type
+date
+note
+budgets
+id
+user_id
+category_id
+month
+limit_amount
+
+API Design
+
+Auth
+POST /auth/register
+POST /auth/login
+
+Transactions
+GET /transactions
+POST /transactions
+PUT /transactions/:id
+DELETE /transactions/:id
+
+Wallet
+CRUD /wallets
+
+Category
+CRUD /categories
+
+Report
+GET /reports/monthly
+GET /reports/category
+
+Yêu cầu kỹ thuật
+Clean architecture
+RESTful API
+Error handling
+Validation (Joi / Zod)
+Pagination
+Secure (JWT, hash password)
+
+Output mong muốn
+
+AI phải:
+Generate full project structure
+Code backend + frontend
+Database schema
+API implementation
+AI integration (function calling)
+UI dashboard

@@ -1,0 +1,145 @@
+Cấu trúc tổng thể 
+SOM/
+│
+├── frontend/          # React app
+├── backend/           # Node.js API
+├── ai-service/        # AI / Copilot integration
+├── .env
+├── README.md
+
+frontend/
+│
+├── public/
+│
+├── src/
+│   ├── assets/          # images, icons
+│   ├── components/      # reusable components
+│   │   ├── ui/
+│   │   ├── charts/
+│   │   └── common/
+│
+│   ├── pages/           # page-level components
+│   │   ├── Dashboard/
+│   │   ├── Transactions/
+│   │   ├── Wallets/
+│   │   ├── Categories/
+│   │   ├── Reports/
+│   │   └── Settings/
+│
+│   ├── layouts/
+│   │   ├── MainLayout.jsx
+│   │   └── AuthLayout.jsx
+│
+│   ├── routes/
+│   │   └── index.jsx
+│
+│   ├── services/        # API calls
+│   │   ├── api.js
+│   │   ├── auth.service.js
+│   │   ├── transaction.service.js
+│   │   └── report.service.js
+│
+│   ├── store/           # state management (Redux/Zustand)
+│   │   ├── auth/
+│   │   ├── transaction/
+│   │   └── ui/
+│
+│   ├── hooks/
+│   ├── utils/
+│   ├── constants/
+│
+│   ├── themes/          # dark mode
+│   ├── App.jsx
+│   └── main.jsx
+│
+├── package.json
+└── vite.config.js
+
+
+backend/
+│
+├── src/
+│   ├── config/            # env, config
+│   │   ├── database.js
+│   │   └── index.js
+│
+│   ├── modules/           # feature-based modules
+│   │
+│   │   ├── auth/
+│   │   │   ├── auth.controller.js
+│   │   │   ├── auth.service.js
+│   │   │   ├── auth.repository.js
+│   │   │   ├── auth.middleware.js
+│   │   │   └── auth.validation.js
+│   │
+│   │   ├── users/
+│   │   ├── transactions/
+│   │   ├── wallets/
+│   │   ├── categories/
+│   │   ├── reports/
+│   │   ├── budgets/
+│   │
+│   │   └── import-export/
+│   │       ├── excel.service.js
+│   │       └── excel.controller.js
+│
+│   ├── common/
+│   │   ├── middleware/
+│   │   │   ├── auth.middleware.js
+│   │   │   └── error.middleware.js
+│   │
+│   │   ├── utils/
+│   │   ├── constants/
+│   │   └── helpers/
+│
+│   ├── database/
+│   │   ├── models/        # ORM models (Sequelize/Prisma)
+│   │   ├── migrations/
+│   │   └── seeders/
+│
+│   ├── routes/
+│   │   └── index.js
+│
+│   ├── app.js
+│   └── server.js
+│
+├── package.json
+
+ai-service/
+│
+├── src/
+│   ├── config/
+│   │   └── openai.js
+│
+│   ├── skills/              # define skill (function calling)
+│   │   ├── createTransaction.js
+│   │   ├── getReport.js
+│   │   └── analyzeSpending.js
+│
+│   ├── agents/
+│   │   └── copilot.agent.js
+│
+│   ├── services/
+│   │   └── ai.service.js
+│
+│   ├── controllers/
+│   │   └── ai.controller.js
+│
+│   ├── routes/
+│   │   └── ai.routes.js
+│
+│   └── utils/
+│
+├── package.json
+
+FLOW KẾT NỐI
+Frontend (React)
+        ↓
+Backend API (Node.js)
+        ↓
+Database (MySQL)
+
+        ↓
+AI Service (Copilot layer)
+        ↓
+Call Backend API

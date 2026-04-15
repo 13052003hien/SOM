@@ -1,0 +1,16 @@
+{
+  "name": "som-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "install:all": "npm --prefix backend install && npm --prefix ai-service install && npm --prefix frontend install",
+    "dev": "concurrently \"npm --prefix backend run dev\" \"npm --prefix ai-service run dev\" \"npm --prefix frontend run dev\"",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:ai": "npm --prefix ai-service run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "audit": "npm --prefix backend audit && npm --prefix ai-service audit && npm --prefix frontend audit"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
