@@ -5,7 +5,31 @@ import { aiRouter } from "./routes/ai.routes.js";
 export function createApp() {
   const app = express();
 
-  app.use(cors({ origin: process.env.FRONTEND_ORIGIN || "http://localhost:5173" }));
+  const env = process.env.NODE_ENV || "development";
+  const allowedOrigins = (process.env.FRONTEND_ORIGIN || "")
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+
+  const allowAllOrigins = env !== "production" || allowedOrigins.includes("*");
+
+  app.use(
+    cors({
+      origin(origin, callback) {
+        if (!origin) {
+          callback(null, true);
+          return;
+        }
+
+        if (allowAllOrigins || allowedOrigins.includes(origin)) {
+          callback(null, true);
+          return;
+        }
+
+        callback(new Error("Not allowed by CORS"));
+      }
+    })
+  );
   app.use(express.json());
 
   app.get("/health", (req, res) => {

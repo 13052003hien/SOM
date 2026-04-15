@@ -5,7 +5,8 @@
   "scripts": {
     "install:all": "npm --prefix backend install && npm --prefix ai-service install && npm --prefix frontend install",
     "dev": "concurrently \"npm --prefix backend run dev\" \"npm --prefix ai-service run dev\" \"npm --prefix frontend run dev\"",
-    "dev:lan": "concurrently \"npm --prefix backend run dev\" \"npm --prefix frontend run dev -- --host\"",
+    "dev:lan:cleanup": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$ports = 4000,5000,5173,5174; foreach ($port in $ports) { $listeners = Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyContinue; foreach ($listener in $listeners) { try { Stop-Process -Id $listener.OwningProcess -Force -ErrorAction SilentlyContinue } catch {} } }; exit 0\"",
+    "dev:lan": "npm run dev:lan:cleanup && concurrently --kill-others-on-fail \"npm --prefix backend run dev\" \"npm --prefix ai-service run dev\" \"npm --prefix frontend run dev -- --host\"",
     "dev:backend": "npm --prefix backend run dev",
     "dev:ai": "npm --prefix ai-service run dev",
     "dev:frontend": "npm --prefix frontend run dev",
