@@ -2,6 +2,7 @@
 .env
 .env.local
 .env.*.local
+.env.example
 !.env.example
 backend/.env
 backend/.env.local
@@ -55,3 +56,5 @@ Thumbs.db
 
 # Misc
 *.pid
+
+.github/
