@@ -6,7 +6,7 @@ function executor(connection) {
 
 export async function listTransactionsByUser({ userId, limit, offset, sortBy, sortOrder }) {
   const [rows] = await pool.query(
-    `SELECT id, user_id, wallet_id, category_id, amount, type, date, note, created_at, updated_at
+    `SELECT id, user_id, wallet_id, category_id, amount, type, DATE_FORMAT(date, '%Y-%m-%d') AS date, note, created_at, updated_at
      FROM transactions
      WHERE user_id = ?
      ORDER BY ${sortBy} ${sortOrder}
@@ -44,7 +44,7 @@ export async function insertTransaction({ connection, userId, payload }) {
   );
 
   const [rows] = await executor(connection).query(
-    "SELECT id, user_id, wallet_id, category_id, amount, type, date, note FROM transactions WHERE id = ?",
+    "SELECT id, user_id, wallet_id, category_id, amount, type, DATE_FORMAT(date, '%Y-%m-%d') AS date, note FROM transactions WHERE id = ?",
     [result.insertId]
   );
 
@@ -53,7 +53,7 @@ export async function insertTransaction({ connection, userId, payload }) {
 
 export async function findTransactionByIdForUser({ connection, id, userId, forUpdate = false }) {
   const sql =
-    "SELECT id, user_id, wallet_id, category_id, amount, type, date, note FROM transactions WHERE id = ? AND user_id = ?" +
+    "SELECT id, user_id, wallet_id, category_id, amount, type, DATE_FORMAT(date, '%Y-%m-%d') AS date, note FROM transactions WHERE id = ? AND user_id = ?" +
     (forUpdate ? " FOR UPDATE" : "");
   const [rows] = await executor(connection).query(sql, [id, userId]);
   return rows[0] || null;

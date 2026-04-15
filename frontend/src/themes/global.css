@@ -1031,6 +1031,59 @@ body {
   color: #dbe4f0;
 }
 
+.ai-insight-panel {
+  border: 1px solid rgba(34, 211, 238, 0.22);
+  border-radius: 12px;
+  padding: 12px;
+  background: linear-gradient(160deg, rgba(7, 24, 38, 0.8) 0%, rgba(11, 15, 31, 0.92) 100%);
+  margin-bottom: 10px;
+}
+
+.ai-insight-panel h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #d1f5ff;
+}
+
+.ai-insight-summary {
+  margin: 8px 0 0;
+  color: #dbeafe;
+}
+
+.ai-insight-list {
+  margin: 12px 0 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 6px;
+  color: #d1d5db;
+}
+
+.ai-insight-actions {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ai-tip-chip {
+  border: 1px solid rgba(147, 197, 253, 0.35);
+  background: rgba(59, 130, 246, 0.14);
+  color: #dbeafe;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.ai-raw-details {
+  margin-top: 8px;
+}
+
+.ai-raw-details summary {
+  cursor: pointer;
+  color: #a5b4fc;
+  margin-bottom: 8px;
+}
+
 @keyframes listItemIn {
   from {
     opacity: 0;

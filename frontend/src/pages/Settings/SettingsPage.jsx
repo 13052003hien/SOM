@@ -71,8 +71,37 @@ export function SettingsPage() {
 
         {response?.data ? (
           <div className="ai-result-card">
-            <p className="ai-result-skill">Skill: {response?.meta?.skill || "unknown"}</p>
-            <pre>{JSON.stringify(response.data, null, 2)}</pre>
+            <p className="ai-result-skill">
+              Skill: {response?.meta?.skill || "unknown"} | Engine: {response?.meta?.provider || "heuristic"}
+            </p>
+
+            {response?.assistant ? (
+              <div className="ai-insight-panel">
+                <h3>{response.assistant.title || "Phan tich AI"}</h3>
+                <p className="ai-insight-summary">{response.assistant.summary}</p>
+
+                {Array.isArray(response.assistant.highlights) && response.assistant.highlights.length > 0 ? (
+                  <ul className="ai-insight-list">
+                    {response.assistant.highlights.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                ) : null}
+
+                {Array.isArray(response.assistant.suggestions) && response.assistant.suggestions.length > 0 ? (
+                  <div className="ai-insight-actions">
+                    {response.assistant.suggestions.map((item) => (
+                      <span key={item} className="ai-tip-chip">{item}</span>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
+
+            <details className="ai-raw-details">
+              <summary>Du lieu chi tiet</summary>
+              <pre>{JSON.stringify(response.data, null, 2)}</pre>
+            </details>
           </div>
         ) : null}
       </PageSection>

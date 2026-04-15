@@ -20,8 +20,10 @@ export async function runCopilotController(req, res) {
     return res.json({
       success: true,
       data: result.data,
+      assistant: result.assistant,
       meta: {
-        skill: result.meta?.skill || "unknown"
+        skill: result.meta?.skill || "unknown",
+        provider: result.meta?.provider || "heuristic"
       }
     });
   } catch (error) {
