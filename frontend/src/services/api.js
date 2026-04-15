@@ -1,7 +1,12 @@
 import axios from "axios";
 import { authStore } from "../store/auth/auth.store";
 
-const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000/api";
+const runtimeBackendUrl =
+  typeof window !== "undefined"
+    ? `${window.location.protocol}//${window.location.hostname}:4000/api`
+    : "http://localhost:4000/api";
+
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || runtimeBackendUrl;
 
 export const api = axios.create({
   baseURL: API_BASE_URL,

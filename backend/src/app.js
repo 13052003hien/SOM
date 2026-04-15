@@ -10,8 +10,27 @@ import { apiRouter } from "./routes/index.js";
 export function createApp() {
   const app = express();
 
+  const allowAllOrigins = config.env !== "production" || config.corsOrigins.includes("*");
+
   app.use(helmet());
-  app.use(cors({ origin: config.corsOrigin }));
+  app.use(
+    cors({
+      origin(origin, callback) {
+        // Allow curl/postman or same-origin requests without Origin header.
+        if (!origin) {
+          callback(null, true);
+          return;
+        }
+
+        if (allowAllOrigins || config.corsOrigins.includes(origin)) {
+          callback(null, true);
+          return;
+        }
+
+        callback(new Error("Not allowed by CORS"));
+      }
+    })
+  );
   app.use(express.json());
   app.use(morgan(config.env === "production" ? "combined" : "dev"));
 
