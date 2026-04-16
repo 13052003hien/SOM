@@ -8,10 +8,10 @@ import {
   updateCategory
 } from "./categories.repository.js";
 
-export async function listCategories({ userId, pagination }) {
+export async function listCategories({ userId, pagination, type }) {
   const [data, total] = await Promise.all([
-    listCategoriesByUser({ userId, ...pagination }),
-    countCategoriesByUser(userId)
+    listCategoriesByUser({ userId, type, ...pagination }),
+    countCategoriesByUser(userId, type)
   ]);
 
   return { data, meta: buildPaginationMeta({ page: pagination.page, limit: pagination.limit, total }) };

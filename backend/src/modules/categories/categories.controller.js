@@ -10,7 +10,7 @@ import {
 export async function listCategoriesController(req, res, next) {
   try {
     const pagination = parsePagination(req.validated.query);
-    const result = await listCategories({ userId: req.auth.userId, pagination });
+    const result = await listCategories({ userId: req.auth.userId, pagination, type: req.validated.query.type });
     return sendSuccess(res, result.data, result.meta);
   } catch (error) {
     return next(error);

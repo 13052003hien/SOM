@@ -12,7 +12,7 @@ export async function getWalletIdsByUser({ userId, walletIds }) {
 export async function getCategoryIdsByUser({ userId, categoryIds }) {
   if (!categoryIds.length) return [];
   const [rows] = await pool.query(
-    `SELECT id FROM categories WHERE user_id = ? AND id IN (${categoryIds.map(() => "?").join(",")})`,
+    `SELECT id FROM categories WHERE (user_id = ? OR scope = 'system') AND id IN (${categoryIds.map(() => "?").join(",")})`,
     [userId, ...categoryIds]
   );
   return rows.map((row) => Number(row.id));

@@ -1455,6 +1455,130 @@ body {
   color: #cbd5e1;
 }
 
+.category-default-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.category-tree-root {
+  display: grid;
+  gap: 16px;
+}
+
+.category-tree-type-section {
+  display: grid;
+  gap: 10px;
+}
+
+.category-tree-type-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.category-tree-type-head h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.category-tree-group-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.category-group-card {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(18, 24, 44, 0.96) 0%, rgba(12, 16, 32, 0.98) 100%);
+  padding: 14px;
+  box-shadow: var(--shadow-sm);
+  display: grid;
+  gap: 12px;
+}
+
+.category-group-card > header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.category-group-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.category-group-head-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.category-group-card strong {
+  display: block;
+  color: #ffffff;
+  font-size: 15px;
+}
+
+.category-group-card p {
+  margin: 4px 0 0;
+  color: #cbd5e1;
+  font-size: 12px;
+}
+
+.category-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.category-custom-item-list {
+  display: grid;
+  gap: 10px;
+}
+
+.category-custom-item-list .crud-item {
+  margin: 0;
+  padding: 12px;
+}
+
+.category-quick-add-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
+.category-quick-add-row input {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-family: inherit;
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #f8fafc;
+}
+
+.category-quick-add-row input:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(193, 93, 252, 0.18);
+}
+
+.category-chip {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #e2e8f0;
+  font-size: 12px;
+}
+
 @keyframes listItemIn {
   from {
     opacity: 0;
@@ -1650,6 +1774,25 @@ body {
   .theme-toggle {
     width: 100%;
     justify-content: center;
+  }
+
+  .category-tree-type-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .category-group-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .category-group-head-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .category-quick-add-row {
+    grid-template-columns: 1fr;
   }
 }
 

@@ -18,11 +18,15 @@ CREATE TABLE IF NOT EXISTS wallets (
 
 CREATE TABLE IF NOT EXISTS categories (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  user_id BIGINT UNSIGNED NOT NULL,
+  user_id BIGINT UNSIGNED NULL,
+  scope ENUM('system', 'custom') NOT NULL DEFAULT 'custom',
+  group_name VARCHAR(100) NULL,
   name VARCHAR(100) NOT NULL,
   type ENUM('income', 'expense') NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_category_scope_type (scope, type),
+  INDEX idx_category_user_scope_type (user_id, scope, type),
   CONSTRAINT fk_category_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 

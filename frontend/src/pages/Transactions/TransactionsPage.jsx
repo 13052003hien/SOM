@@ -16,6 +16,11 @@ function getTypeLabel(type) {
   return type === "income" ? "Thu nhập" : "Chi tiêu";
 }
 
+function getCategoryLabel(category) {
+  if (!category) return "";
+  return category.group_name ? `${category.group_name} / ${category.name}` : category.name;
+}
+
 function formatDisplayDate(value) {
   const [year, month, day] = String(value || "").slice(0, 10).split("-");
   if (!year || !month || !day) return String(value || "");
@@ -68,7 +73,16 @@ export function TransactionsPage() {
       setForm((prev) => ({
         ...prev,
         wallet_id: prev.wallet_id || (nextWallets[0]?.id ? String(nextWallets[0].id) : ""),
-        category_id: prev.category_id || (nextCategories[0]?.id ? String(nextCategories[0].id) : "")
+        category_id: (() => {
+          const selectedCategory = nextCategories.find((category) => String(category.id) === String(prev.category_id));
+          if (selectedCategory && selectedCategory.type === prev.type) {
+            return prev.category_id;
+          }
+
+          const nextType = prev.type || "expense";
+          const nextTypeCategory = nextCategories.find((category) => category.type === nextType);
+          return nextTypeCategory?.id ? String(nextTypeCategory.id) : "";
+        })()
       }));
     } catch (err) {
       const errorMsg = err.message || "Tải giao dịch thất bại";
@@ -86,8 +100,12 @@ export function TransactionsPage() {
   }, [wallets]);
 
   const categoryNameById = useMemo(() => {
-    return new Map(categories.map((category) => [category.id, category.name]));
+    return new Map(categories.map((category) => [category.id, getCategoryLabel(category)]));
   }, [categories]);
+
+  const availableCategories = useMemo(() => {
+    return categories.filter((category) => category.type === form.type);
+  }, [categories, form.type]);
 
   function startEdit(row) {
     setForm({
@@ -175,9 +193,9 @@ export function TransactionsPage() {
             onChange={(event) => setForm((prev) => ({ ...prev, category_id: event.target.value }))}
             required
           >
-            {categories.map((category) => (
+            {availableCategories.map((category) => (
               <option key={category.id} value={category.id}>
-                {category.name} ({getTypeLabel(category.type)})
+                {getCategoryLabel(category)} ({getTypeLabel(category.type)})
               </option>
             ))}
           </select>
@@ -193,7 +211,17 @@ export function TransactionsPage() {
 
           <select
             value={form.type}
-            onChange={(event) => setForm((prev) => ({ ...prev, type: event.target.value }))}
+            onChange={(event) => {
+              const nextType = event.target.value;
+              const nextCategories = categories.filter((category) => category.type === nextType);
+              setForm((prev) => ({
+                ...prev,
+                type: nextType,
+                category_id: nextCategories.some((category) => String(category.id) === String(prev.category_id))
+                  ? prev.category_id
+                  : (nextCategories[0]?.id ? String(nextCategories[0].id) : "")
+              }));
+            }}
           >
             <option value="expense">Chi tiêu</option>
             <option value="income">Thu nhập</option>

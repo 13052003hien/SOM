@@ -248,6 +248,8 @@ function scoreCategory(category, promptText, categoryHint) {
   const categoryNorm = normalizeText(category.name);
   const promptTokens = tokenize(promptText);
   const categoryTokens = tokenize(category.name);
+  const groupNorm = normalizeText(category.group_name);
+  const groupTokens = tokenize(category.group_name);
   const aliases = {
     cafe: ["quan cafe", "cafe", "ca phe", "coffee", "quan ca phe", "quan coffee"],
     meal: ["an", "an uong", "an sang", "an trua", "an toi", "uong", "com", "do an", "sinh hoat", "sinh hoat"],
@@ -262,15 +264,25 @@ function scoreCategory(category, promptText, categoryHint) {
     score += 8;
   }
 
+  if (groupNorm && promptNorm.includes(groupNorm)) {
+    score += 4;
+  }
+
   for (const token of categoryTokens) {
     if (promptTokens.includes(token)) {
       score += 2;
     }
   }
 
+  for (const token of groupTokens) {
+    if (promptTokens.includes(token)) {
+      score += 1;
+    }
+  }
+
   if (categoryHint) {
     const hintNorm = normalizeText(categoryHint);
-    if (categoryNorm.includes(hintNorm) || hintNorm.includes(categoryNorm)) {
+    if (categoryNorm.includes(hintNorm) || hintNorm.includes(categoryNorm) || (groupNorm && groupNorm.includes(hintNorm))) {
       score += 6;
     }
   }
@@ -398,7 +410,7 @@ export const createTransactionSkill = {
       data: result.data,
       context: {
         walletName: wallet.name,
-        categoryName: category.name,
+        categoryName: category.group_name ? `${category.group_name} / ${category.name}` : category.name,
         transactionType: parsed.type,
         transactionDate: payload.date,
         amount: payload.amount,

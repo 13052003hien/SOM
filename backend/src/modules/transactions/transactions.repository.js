@@ -31,7 +31,7 @@ export async function getWalletByIdForUser({ connection, userId, walletId, forUp
 
 export async function getCategoryByIdForUser({ connection, userId, categoryId }) {
   const [rows] = await executor(connection).query(
-    "SELECT id, user_id, name, type FROM categories WHERE id = ? AND user_id = ?",
+    "SELECT id, user_id, scope, group_name, name, type FROM categories WHERE id = ? AND (user_id = ? OR scope = 'system')",
     [categoryId, userId]
   );
   return rows[0] || null;
