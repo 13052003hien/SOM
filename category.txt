@@ -1,0 +1,77 @@
+Danh mục:
+    A,Chi tiêu
+        1.Ăn uống
+            Đi chợ/Siêu thị
+            Cafe
+            Ăn sáng
+            Ăn trưa
+            Ăn tối
+        2.Dịch vụ sinh hoạt 
+            Điện 
+            Nước
+            Internet
+            Điện thoại di động
+            Gas
+            Truyền hình
+            Điện thoại cố định
+            Thuê người giúp việc
+        3.Đi lại
+            Xăng xe
+            Bảo hiểm xe 
+            Bảo dưỡng, Sửa chữa xe
+            Gửi xe
+            Rửa xe
+            Taxi/Thuê xe
+        4.Con cái
+            Học phí 
+            Sách vở 
+            Sữa
+            Đồ chơi
+            Tiền tiêu vặt
+        5.Trang phục
+            Quần áo 
+            Giày dép
+            Phụ kiện khác
+        6.Hiếu hỉ 
+            Cưới xin
+            Ma chay
+            Thăm hỏi
+            Biếu tặng 
+        7.Sức khỏe
+            Khám chữa bệnh
+            Thuốc men
+            Thể thao
+        8.Nhà cửa
+            Mua sắm đồ đạc
+            Sửa chữa nhà cửa
+            Thuê Nhà
+        9.Hưởng thụ
+            Vui chơi giải trí 
+            Du lịch
+            Làm đẹp 
+            Phim ảnh ca nhạc
+            Mỹ phẩm 
+        10.Phát triển bản thân
+            Học hành
+            Giao lưu, quan hệ 
+        11.Ngân hàng
+            Phí chuyển khoản
+        12.Khác
+        
+    B,Thu nhập
+        1.Lương
+            Lương chính
+            Thưởng
+            Làm thêm(OT)
+        2.Kinh doanh
+            Bán hàng
+            Dịch vụ 
+        3.Đầu tư
+            Cổ tức 
+            Lãi tiết kiệm
+            Crypto/Chứng khoán
+        4.Thu nhập khác
+            Cho/Tặng 
+            Hoàn tiền
+            Bán đồ cá nhân
+        5.Khác

@@ -1164,6 +1164,37 @@ body {
   color: var(--muted);
 }
 
+.report-trend-head-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.report-range-switch {
+  display: inline-flex;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.report-range-switch button {
+  border: 0;
+  background: transparent;
+  color: #cbd5e1;
+  padding: 5px 10px;
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.report-range-switch button.active {
+  background: rgba(193, 93, 252, 0.28);
+  color: #ffffff;
+}
+
 .report-trend-card {
   grid-column: 1 / -1;
 }
@@ -1297,12 +1328,25 @@ body {
   font-size: 13px;
 }
 
+.report-donut-legend li.legend-positive .legend-label,
+.report-donut-legend li.legend-positive strong {
+  color: #86efac;
+}
+
+.report-donut-legend li.legend-negative .legend-label,
+.report-donut-legend li.legend-negative strong {
+  color: #fda4af;
+}
+
 .report-trend-bars {
   display: grid;
-  grid-template-columns: repeat(10, minmax(0, 1fr));
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(34px, 1fr);
   gap: 8px;
   align-items: end;
   min-height: 170px;
+  overflow-x: auto;
+  padding-bottom: 4px;
 }
 
 .report-trend-item {
@@ -1312,6 +1356,7 @@ body {
 }
 
 .report-trend-bar-wrap {
+  position: relative;
   width: 100%;
   height: 130px;
   display: flex;
@@ -1327,6 +1372,63 @@ body {
   border-radius: 8px 8px 3px 3px;
 }
 
+.report-trend-tooltip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  transform: translateX(-50%) translateY(6px);
+  min-width: 148px;
+  max-width: 220px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
+  padding: 8px;
+  background: rgba(8, 12, 24, 0.96);
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease, transform 160ms ease;
+  z-index: 4;
+}
+
+.report-trend-tooltip strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #ffffff;
+  font-size: 12px;
+}
+
+.report-trend-tooltip p {
+  margin: 2px 0;
+  color: #cbd5e1;
+  font-size: 12px;
+}
+
+.report-trend-net-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.report-trend-arrow {
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.report-trend-net-row.positive {
+  color: #86efac;
+}
+
+.report-trend-net-row.negative {
+  color: #fda4af;
+}
+
+.report-trend-bar-wrap:hover .report-trend-tooltip,
+.report-trend-bar-wrap:focus-within .report-trend-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
 .report-trend-bar.positive {
   background: linear-gradient(180deg, rgba(34, 197, 94, 0.95), rgba(21, 128, 61, 0.95));
 }
@@ -1338,6 +1440,14 @@ body {
 .report-trend-item span {
   color: #cbd5e1;
   font-size: 12px;
+}
+
+.report-trend-axis.positive {
+  color: #86efac;
+}
+
+.report-trend-axis.negative {
+  color: #fda4af;
 }
 
 .report-chart-empty {
@@ -1472,9 +1582,9 @@ body {
     grid-template-columns: 1fr;
   }
 
-  .report-trend-bars {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    row-gap: 12px;
+  .report-trend-head-meta {
+    width: 100%;
+    justify-content: space-between;
   }
 }
 
@@ -1622,6 +1732,14 @@ body {
 
   .report-trend-bar-wrap {
     height: 110px;
+  }
+
+  .report-range-switch {
+    width: 100%;
+  }
+
+  .report-range-switch button {
+    flex: 1;
   }
 }
 
