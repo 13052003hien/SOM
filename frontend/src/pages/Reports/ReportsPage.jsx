@@ -1,11 +1,27 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { PageSection } from "../../components/common/PageSection";
+import { ReportCharts } from "../../components/ui/ReportCharts";
+import { StatCard } from "../../components/ui/StatCard";
 import { getCategoryReport, getCurrentMonth, getMonthlyReport } from "../../services/report.service";
 import { useToast } from "../../store/toast/toast.store";
 import { formatVND } from "../../utils/formatters";
 
-function getTypeLabel(type) {
-  return type === "income" ? "Thu nhập" : "Chi tiêu";
+function getSignedDelta(value) {
+  const numeric = Number(value || 0);
+  if (numeric > 0) return `+${formatVND(numeric)}`;
+  return formatVND(numeric);
+}
+
+function getDeltaTone(value, higherIsBetter = true) {
+  const numeric = Number(value || 0);
+  if (!Number.isFinite(numeric) || numeric === 0) return "neutral";
+
+  const isPositiveDirection = numeric > 0;
+  if (higherIsBetter) {
+    return isPositiveDirection ? "positive" : "negative";
+  }
+
+  return isPositiveDirection ? "negative" : "positive";
 }
 
 export function ReportsPage() {
@@ -14,6 +30,79 @@ export function ReportsPage() {
   const [category, setCategory] = useState(null);
   const [month, setMonth] = useState(getCurrentMonth());
   const [error, setError] = useState("");
+
+  const monthlyCards = useMemo(() => {
+    if (!monthly) return [];
+
+    return [
+      { label: "Thu nhập", value: formatVND(monthly.totalIncome || 0), helper: `Kỳ ${monthly.month}` },
+      { label: "Chi tiêu", value: formatVND(monthly.totalExpense || 0), helper: `Kỳ ${monthly.month}` },
+      { label: "Cân đối", value: formatVND(monthly.net || 0), helper: monthly.net >= 0 ? "Dương ngân sách" : "Âm ngân sách" },
+      { label: "Tháng trước", value: monthly.previousMonth?.month || "Không có", helper: "Kỳ so sánh" },
+      {
+        label: "Biến động thu nhập",
+        value: getSignedDelta(monthly.comparison?.incomeDelta),
+        helper: "So với tháng trước",
+        tone: getDeltaTone(monthly.comparison?.incomeDelta, true)
+      },
+      {
+        label: "Biến động chi tiêu",
+        value: getSignedDelta(monthly.comparison?.expenseDelta),
+        helper: "So với tháng trước",
+        tone: getDeltaTone(monthly.comparison?.expenseDelta, false)
+      },
+      {
+        label: "Biến động cân đối",
+        value: getSignedDelta(monthly.comparison?.netDelta),
+        helper: "So với tháng trước",
+        tone: getDeltaTone(monthly.comparison?.netDelta, true)
+      }
+    ];
+  }, [monthly]);
+
+  const budgetCards = useMemo(() => {
+    if (!monthly?.budget) return [];
+
+    const cards = [
+      {
+        label: "Ngân sách vượt mức",
+        value: String(monthly.budget.exceededBudgets || 0),
+        helper: `Trên tổng ${monthly.budget.totalBudgets || 0} ngân sách`
+      }
+    ];
+
+    const alertCards = (monthly.budget.alerts || []).map((alert) => ({
+      label: alert.category_name,
+      value: formatVND(alert.exceeded_by || 0),
+      helper: `Đã chi ${formatVND(alert.spent_amount || 0)} / Giới hạn ${formatVND(alert.limit_amount || 0)}`
+    }));
+
+    return [...cards, ...alertCards];
+  }, [monthly]);
+
+  const categoryCards = useMemo(() => {
+    return (category?.breakdown || []).map((item) => ({
+      label: item.category_name,
+      value: formatVND(item.total || 0),
+      helper: item.type === "income" ? "Danh mục thu nhập" : "Danh mục chi tiêu"
+    }));
+  }, [category]);
+
+  const pieCards = useMemo(() => {
+    return (monthly?.charts?.pie || []).map((item) => ({
+      label: item.label,
+      value: formatVND(item.value || 0),
+      helper: `${item.percentage || 0}% tổng chi tiêu`
+    }));
+  }, [monthly]);
+
+  const barCards = useMemo(() => {
+    return (monthly?.charts?.bar || []).map((item) => ({
+      label: `Ngày ${item.label}`,
+      value: formatVND(item.net || 0),
+      helper: `Thu ${formatVND(item.income || 0)} | Chi ${formatVND(item.expense || 0)}`
+    }));
+  }, [monthly]);
 
   useEffect(() => {
     Promise.all([getMonthlyReport(month), getCategoryReport(month, "expense")])
@@ -41,34 +130,26 @@ export function ReportsPage() {
       </PageSection>
 
       <PageSection title="Báo cáo theo tháng" subtitle="Tổng hợp thu chi theo tháng">
-        {monthly ? (
-          <ul className="report-summary">
-            <li><strong>Tháng:</strong> {monthly.month}</li>
-            <li><strong>Thu nhập:</strong> {formatVND(monthly.totalIncome)}</li>
-            <li><strong>Chi tiêu:</strong> {formatVND(monthly.totalExpense)}</li>
-            <li><strong>Cân đối:</strong> {formatVND(monthly.net)}</li>
-            <li><strong>Tháng trước:</strong> {monthly.previousMonth?.month}</li>
-            <li><strong>Biến động thu nhập:</strong> {formatVND(monthly.comparison?.incomeDelta)}</li>
-            <li><strong>Biến động chi tiêu:</strong> {formatVND(monthly.comparison?.expenseDelta)}</li>
-            <li><strong>Biến động cân đối:</strong> {formatVND(monthly.comparison?.netDelta)}</li>
-          </ul>
+        {monthlyCards.length ? (
+          <div className="stats-grid">
+            {monthlyCards.map((item) => (
+              <StatCard key={item.label} label={item.label} value={item.value} helper={item.helper} tone={item.tone} />
+            ))}
+          </div>
         ) : (
           <p>Không có dữ liệu báo cáo.</p>
         )}
       </PageSection>
 
+      <PageSection title="Biểu đồ trực quan" subtitle="Tổng hợp nhanh để nhìn xu hướng dễ hơn">
+        <ReportCharts monthly={monthly} category={category} />
+      </PageSection>
+
       <PageSection title="Cảnh báo ngân sách" subtitle="Cảnh báo vượt ngân sách theo tháng">
-        {monthly?.budget?.alerts?.length ? (
-          <div className="crud-list">
-            {monthly.budget.alerts.map((alert) => (
-              <article key={alert.id} className="crud-item">
-                <div>
-                  <strong>{alert.category_name}</strong>
-                  <p>
-                    Đã chi {formatVND(alert.spent_amount)} / Giới hạn {formatVND(alert.limit_amount)} (Vượt {formatVND(alert.exceeded_by)})
-                  </p>
-                </div>
-              </article>
+        {budgetCards.length ? (
+          <div className="stats-grid">
+            {budgetCards.map((item) => (
+              <StatCard key={`${item.label}-${item.helper}`} label={item.label} value={item.value} helper={item.helper} />
             ))}
           </div>
         ) : (
@@ -77,45 +158,11 @@ export function ReportsPage() {
       </PageSection>
 
       <PageSection title="Thống kê theo danh mục" subtitle="Phân bố chi tiêu theo danh mục">
-        {category?.breakdown?.length ? (
-          <div className="report-data-wrap">
-            <div className="table-wrap desktop-report-table">
-              <table className="simple-table">
-                <thead>
-                  <tr>
-                    <th>Danh mục</th>
-                    <th>Loại</th>
-                    <th>Tổng</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {category.breakdown.map((item) => (
-                    <tr key={item.category_id}>
-                      <td>{item.category_name}</td>
-                      <td>{getTypeLabel(item.type)}</td>
-                      <td>{formatVND(item.total)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            <div className="mobile-report-list">
-              {category.breakdown.map((item) => (
-                <article key={`category-${item.category_id}`} className="mobile-report-card">
-                  <header>
-                    <strong>{item.category_name}</strong>
-                    <span className={`type-badge ${item.type === "income" ? "type-badge-income" : "type-badge-expense"}`}>
-                      {getTypeLabel(item.type)}
-                    </span>
-                  </header>
-                  <p>
-                    <span>Tổng</span>
-                    <strong>{formatVND(item.total)}</strong>
-                  </p>
-                </article>
-              ))}
-            </div>
+        {categoryCards.length ? (
+          <div className="stats-grid">
+            {categoryCards.map((item) => (
+              <StatCard key={`${item.label}-${item.helper}`} label={item.label} value={item.value} helper={item.helper} />
+            ))}
           </div>
         ) : (
           <p>Không có dữ liệu danh mục trong tháng này.</p>
@@ -123,43 +170,11 @@ export function ReportsPage() {
       </PageSection>
 
       <PageSection title="Dữ liệu biểu đồ tròn" subtitle="Cấu trúc dữ liệu chuẩn cho Pie chart">
-        {monthly?.charts?.pie?.length ? (
-          <div className="report-data-wrap">
-            <div className="table-wrap desktop-report-table">
-              <table className="simple-table">
-                <thead>
-                  <tr>
-                    <th>Nhãn</th>
-                    <th>Giá trị</th>
-                    <th>Tỷ lệ</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {monthly.charts.pie.map((item) => (
-                    <tr key={item.id}>
-                      <td>{item.label}</td>
-                      <td>{formatVND(item.value)}</td>
-                      <td>{item.percentage}%</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            <div className="mobile-report-list">
-              {monthly.charts.pie.map((item) => (
-                <article key={`pie-${item.id}`} className="mobile-report-card">
-                  <header>
-                    <strong>{item.label}</strong>
-                    <span>{item.percentage}%</span>
-                  </header>
-                  <p>
-                    <span>Giá trị</span>
-                    <strong>{formatVND(item.value)}</strong>
-                  </p>
-                </article>
-              ))}
-            </div>
+        {pieCards.length ? (
+          <div className="stats-grid">
+            {pieCards.map((item) => (
+              <StatCard key={`${item.label}-${item.helper}`} label={item.label} value={item.value} helper={item.helper} />
+            ))}
           </div>
         ) : (
           <p>Không có dữ liệu biểu đồ tròn trong tháng này.</p>
@@ -167,51 +182,11 @@ export function ReportsPage() {
       </PageSection>
 
       <PageSection title="Dữ liệu biểu đồ cột" subtitle="Cấu trúc dữ liệu chuẩn cho Bar chart theo ngày">
-        {monthly?.charts?.bar?.length ? (
-          <div className="report-data-wrap">
-            <div className="table-wrap desktop-report-table">
-              <table className="simple-table">
-                <thead>
-                  <tr>
-                    <th>Ngày</th>
-                    <th>Thu nhập</th>
-                    <th>Chi tiêu</th>
-                    <th>Cân đối</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {monthly.charts.bar.map((item) => (
-                    <tr key={item.label}>
-                      <td>{item.label}</td>
-                      <td>{formatVND(item.income)}</td>
-                      <td>{formatVND(item.expense)}</td>
-                      <td>{formatVND(item.net)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            <div className="mobile-report-list">
-              {monthly.charts.bar.map((item) => (
-                <article key={`bar-${item.label}`} className="mobile-report-card">
-                  <header>
-                    <strong>{item.label}</strong>
-                    <span>{formatVND(item.net)}</span>
-                  </header>
-                  <div className="mobile-report-grid">
-                    <p>
-                      <span>Thu nhập</span>
-                      <strong>{formatVND(item.income)}</strong>
-                    </p>
-                    <p>
-                      <span>Chi tiêu</span>
-                      <strong>{formatVND(item.expense)}</strong>
-                    </p>
-                  </div>
-                </article>
-              ))}
-            </div>
+        {barCards.length ? (
+          <div className="stats-grid">
+            {barCards.map((item) => (
+              <StatCard key={`${item.label}-${item.value}`} label={item.label} value={item.value} helper={item.helper} />
+            ))}
           </div>
         ) : (
           <p>Không có dữ liệu biểu đồ cột trong tháng này.</p>
