@@ -26,10 +26,10 @@ function ensureCategoryMatchesType(category, type) {
   }
 }
 
-export async function listTransactions({ userId, pagination }) {
+export async function listTransactions({ userId, pagination, filters }) {
   const [data, total] = await Promise.all([
-    listTransactionsByUser({ userId, ...pagination }),
-    countTransactionsByUser(userId)
+    listTransactionsByUser({ userId, filters, ...pagination }),
+    countTransactionsByUser({ userId, filters })
   ]);
 
   return { data, meta: buildPaginationMeta({ page: pagination.page, limit: pagination.limit, total }) };

@@ -17,7 +17,14 @@ export const listTransactionSchema = z.object({
     page: z.coerce.number().int().positive().optional(),
     limit: z.coerce.number().int().positive().optional(),
     sortBy: z.string().optional(),
-    sortOrder: z.enum(["asc", "desc", "ASC", "DESC"]).optional()
+    sortOrder: z.enum(["asc", "desc", "ASC", "DESC"]).optional(),
+    q: z.string().optional(),
+    type: z.enum(["income", "expense"]).optional(),
+    category_id: z.coerce.number().int().positive().optional(),
+    date_from: z.string().optional(),
+    date_to: z.string().optional(),
+    amount_min: z.coerce.number().nonnegative().optional(),
+    amount_max: z.coerce.number().nonnegative().optional()
   }),
   body: z.object({})
 });
