@@ -15,6 +15,34 @@
   --shadow-md: 0 14px 38px rgba(0, 0, 0, 0.34);
   --shadow-lg: 0 18px 50px rgba(0, 0, 0, 0.42);
   --shadow-xl: 0 24px 72px rgba(0, 0, 0, 0.5);
+  --body-grad-1: rgba(193, 93, 252, 0.22);
+  --body-grad-2: rgba(255, 107, 214, 0.16);
+  --body-grad-3: rgba(59, 130, 246, 0.14);
+  --body-base-1: #050816;
+  --body-base-2: #080d1f;
+  --body-base-3: #0a0f24;
+}
+
+[data-theme="light"] {
+  --bg: #f7f5ff;
+  --surface: rgba(255, 255, 255, 0.9);
+  --surface-strong: #ffffff;
+  --text: #1e1b4b;
+  --muted: #5b5b7c;
+  --brand: #a855f7;
+  --brand-light: #ec4899;
+  --brand-soft: rgba(168, 85, 247, 0.2);
+  --line: rgba(91, 33, 182, 0.16);
+  --shadow-sm: 0 8px 20px rgba(54, 34, 104, 0.12);
+  --shadow-md: 0 12px 28px rgba(54, 34, 104, 0.16);
+  --shadow-lg: 0 18px 40px rgba(54, 34, 104, 0.18);
+  --shadow-xl: 0 24px 62px rgba(54, 34, 104, 0.2);
+  --body-grad-1: rgba(168, 85, 247, 0.18);
+  --body-grad-2: rgba(236, 72, 153, 0.14);
+  --body-grad-3: rgba(14, 165, 233, 0.12);
+  --body-base-1: #fcfaff;
+  --body-base-2: #f6f1ff;
+  --body-base-3: #f2f8ff;
 }
 
 * {
@@ -24,11 +52,11 @@
 }
 
 a {
-  color: #f9a8d4;
+  color: var(--brand-light);
 }
 
 a:hover {
-  color: #fbcfe8;
+  opacity: 0.86;
 }
 
 body {
@@ -37,11 +65,15 @@ body {
   color: var(--text);
   color-scheme: dark;
   background:
-    radial-gradient(circle at 18% 12%, rgba(193, 93, 252, 0.22) 0, rgba(193, 93, 252, 0) 30%),
-    radial-gradient(circle at 85% 18%, rgba(255, 107, 214, 0.16) 0, rgba(255, 107, 214, 0) 28%),
-    radial-gradient(circle at 50% 110%, rgba(59, 130, 246, 0.14) 0, rgba(59, 130, 246, 0) 35%),
-    linear-gradient(180deg, #050816 0%, #080d1f 45%, #0a0f24 100%);
+    radial-gradient(circle at 18% 12%, var(--body-grad-1) 0, rgba(193, 93, 252, 0) 30%),
+    radial-gradient(circle at 85% 18%, var(--body-grad-2) 0, rgba(255, 107, 214, 0) 28%),
+    radial-gradient(circle at 50% 110%, var(--body-grad-3) 0, rgba(59, 130, 246, 0) 35%),
+    linear-gradient(180deg, var(--body-base-1) 0%, var(--body-base-2) 45%, var(--body-base-3) 100%);
   min-height: 100vh;
+}
+
+[data-theme="light"] body {
+  color-scheme: light;
 }
 
 .app-shell {
@@ -102,6 +134,9 @@ body {
   color: #e5e7eb;
   padding: 11px 14px;
   border-radius: 10px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
   transition: all 200ms ease;
   font-weight: 500;
   font-size: 14px;
@@ -117,6 +152,61 @@ body {
   background: linear-gradient(135deg, var(--brand) 0%, var(--brand-light) 100%);
   color: #ffffff;
   box-shadow: 0 14px 30px rgba(193, 93, 252, 0.26);
+}
+
+.theme-toggle {
+  margin-top: 14px;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(193, 93, 252, 0.12) 0%, rgba(255, 107, 214, 0.08) 100%);
+  color: var(--text);
+  padding: 10px 12px;
+  display: grid;
+  gap: 3px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 180ms ease;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.theme-toggle-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: #fde047;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.12);
+}
+
+.theme-toggle-dot.is-dark {
+  background: #67e8f9;
+}
+
+.theme-toggle-dot.is-light {
+  background: #facc15;
+}
+
+.theme-toggle-label {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.theme-toggle-hint {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.auth-theme-toggle {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: auto;
+  min-width: 190px;
+  z-index: 2;
 }
 
 .dashboard-hero {
@@ -649,6 +739,19 @@ body {
   padding: 2px 0;
 }
 
+.auth-title {
+  margin: 0;
+}
+
+.auth-subtitle {
+  margin: 0;
+  color: var(--muted);
+}
+
+.auth-switch {
+  margin: 0;
+}
+
 .auth-form label {
   display: grid;
   gap: 8px;
@@ -801,6 +904,10 @@ body {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+}
+
+.transaction-filter-actions button {
+  min-height: 40px;
 }
 
 .transaction-modal-overlay {
@@ -1219,6 +1326,7 @@ body {
   border: none;
   border-radius: 10px;
   padding: 10px 14px;
+  min-height: 40px;
   font-family: inherit;
   font-weight: 600;
   cursor: pointer;
@@ -1240,9 +1348,11 @@ body {
 .ai-chip {
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 999px;
-  padding: 6px 10px;
+  padding: 8px 12px;
+  min-height: 38px;
   font-family: inherit;
   font-size: 12px;
+  font-weight: 600;
   color: #e5e7eb;
   background: rgba(255, 255, 255, 0.05);
   cursor: pointer;
@@ -1419,9 +1529,11 @@ body {
   border: 0;
   background: transparent;
   color: #cbd5e1;
-  padding: 5px 10px;
+  padding: 8px 12px;
+  min-height: 40px;
   font-family: inherit;
   font-size: 12px;
+  font-weight: 600;
   cursor: pointer;
 }
 
@@ -1785,18 +1897,23 @@ body {
 
 .category-quick-add-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(120px, 0.8fr) minmax(0, 2fr);
   gap: 8px;
 }
 
 .category-quick-add-row input {
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 10px;
-  padding: 10px 12px;
+  padding: 12px 12px;
   font-family: inherit;
   font-size: 14px;
+  min-height: 46px;
   background: rgba(255, 255, 255, 0.05);
   color: #f8fafc;
+}
+
+.category-quick-add-row .secondary-button {
+  min-height: 46px;
 }
 
 .category-quick-add-row input:focus {
@@ -1812,6 +1929,376 @@ body {
   background: rgba(255, 255, 255, 0.05);
   color: #e2e8f0;
   font-size: 12px;
+}
+
+.react-datepicker {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background: rgba(18, 22, 42, 0.98);
+  color: #f8fafc;
+  box-shadow: var(--shadow-lg);
+  font-family: inherit;
+}
+
+.react-datepicker__header {
+  background: rgba(30, 36, 62, 0.98);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.react-datepicker__current-month,
+.react-datepicker-time__header,
+.react-datepicker-year-header,
+.react-datepicker__day-name,
+.react-datepicker__day,
+.react-datepicker__time-name {
+  color: #f1f5f9;
+}
+
+.react-datepicker__day:hover,
+.react-datepicker__month-text:hover,
+.react-datepicker__quarter-text:hover,
+.react-datepicker__year-text:hover {
+  background: rgba(193, 93, 252, 0.24);
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected,
+.react-datepicker__month-text--selected,
+.react-datepicker__month-text--keyboard-selected,
+.react-datepicker__today-button {
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-light) 100%);
+  color: #ffffff;
+}
+
+.react-datepicker__today-button {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="light"] .app-shell {
+  background: transparent;
+}
+
+[data-theme="light"] .left-rail {
+  border-right-color: rgba(124, 58, 237, 0.18);
+  background: rgba(255, 255, 255, 0.78);
+}
+
+[data-theme="light"] .left-rail p,
+[data-theme="light"] .dashboard-topbar-text,
+[data-theme="light"] .dashboard-hero p,
+[data-theme="light"] .dashboard-hero-meta span,
+[data-theme="light"] .auth-intro p,
+[data-theme="light"] .auth-visual-copy p,
+[data-theme="light"] .stat-card span,
+[data-theme="light"] .table-meta {
+  color: #4c4c70;
+}
+
+[data-theme="light"] .auth-user {
+  color: #3b2f5f;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.14) 0%, rgba(255, 255, 255, 0.95) 100%);
+}
+
+[data-theme="light"] .nav-item {
+  color: #2f2858;
+}
+
+[data-theme="light"] .dashboard-hero,
+[data-theme="light"] .auth-panel,
+[data-theme="light"] .page-section,
+[data-theme="light"] .stat-card,
+[data-theme="light"] .ai-result-card,
+[data-theme="light"] .ai-context-card,
+[data-theme="light"] .ai-insight-panel,
+[data-theme="light"] .table-wrap,
+[data-theme="light"] .simple-table,
+[data-theme="light"] .mobile-transaction-card,
+[data-theme="light"] .transaction-modal,
+[data-theme="light"] .transaction-confirm-dialog,
+[data-theme="light"] .category-type-card,
+[data-theme="light"] .category-group-card,
+[data-theme="light"] .crud-item,
+[data-theme="light"] .report-chart-card,
+[data-theme="light"] .report-trend-bar-wrap,
+[data-theme="light"] .report-trend-tooltip,
+[data-theme="light"] .auth-visual-card {
+  border-color: rgba(124, 58, 237, 0.16);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(246, 241, 255, 0.96) 100%);
+  box-shadow: var(--shadow-md);
+}
+
+[data-theme="light"] .simple-table th {
+  color: #2f2858;
+  background: linear-gradient(180deg, rgba(237, 229, 255, 0.96) 0%, rgba(247, 243, 255, 0.98) 100%);
+  border-bottom-color: rgba(124, 58, 237, 0.14);
+}
+
+[data-theme="light"] .simple-table td {
+  color: #2f2858;
+  border-bottom-color: rgba(124, 58, 237, 0.1);
+}
+
+[data-theme="light"] .simple-table tbody tr:hover {
+  background: rgba(168, 85, 247, 0.12);
+}
+
+[data-theme="light"] .crud-form input,
+[data-theme="light"] .crud-form select,
+[data-theme="light"] .auth-form input,
+[data-theme="light"] .transaction-filter-panel input,
+[data-theme="light"] .transaction-filter-panel select,
+[data-theme="light"] .category-quick-add-row input {
+  color: #2f2858;
+  border-color: rgba(124, 58, 237, 0.2);
+  background: rgba(255, 255, 255, 0.92);
+}
+
+[data-theme="light"] .crud-form input::placeholder,
+[data-theme="light"] .auth-form input::placeholder,
+[data-theme="light"] .transaction-filter-panel input::placeholder {
+  color: #7b729b;
+}
+
+[data-theme="light"] .secondary-button {
+  background: rgba(255, 255, 255, 0.95);
+  color: #31275e;
+  border-color: rgba(124, 58, 237, 0.18);
+}
+
+[data-theme="light"] .danger-button {
+  background: rgba(255, 239, 242, 0.96);
+  border-color: rgba(220, 38, 38, 0.2);
+  color: #991b1b;
+}
+
+[data-theme="light"] .transaction-modal-overlay,
+[data-theme="light"] .transaction-confirm-overlay {
+  background: rgba(63, 42, 111, 0.25);
+}
+
+[data-theme="light"] .react-datepicker {
+  border-color: rgba(124, 58, 237, 0.22);
+  background: #ffffff;
+  color: #2f2858;
+}
+
+[data-theme="light"] .react-datepicker__header {
+  background: #efe7ff;
+  border-bottom-color: rgba(124, 58, 237, 0.18);
+}
+
+[data-theme="light"] .react-datepicker__current-month,
+[data-theme="light"] .react-datepicker-time__header,
+[data-theme="light"] .react-datepicker-year-header,
+[data-theme="light"] .react-datepicker__day-name,
+[data-theme="light"] .react-datepicker__day,
+[data-theme="light"] .react-datepicker__time-name {
+  color: #2f2858;
+}
+
+[data-theme="light"] .dashboard-hero h1,
+[data-theme="light"] .dashboard-hero-meta strong,
+[data-theme="light"] .dashboard-hero-kicker,
+[data-theme="light"] .page-section-head h2,
+[data-theme="light"] .auth-intro h1,
+[data-theme="light"] .auth-visual-copy h2,
+[data-theme="light"] .crud-item strong,
+[data-theme="light"] .stat-card strong,
+[data-theme="light"] .category-tree-type-head h3,
+[data-theme="light"] .category-group-card strong,
+[data-theme="light"] .ai-result-skill,
+[data-theme="light"] .ai-context-card strong,
+[data-theme="light"] .ai-insight-panel h3,
+[data-theme="light"] .report-donut-core strong,
+[data-theme="light"] .report-donut-legend strong,
+[data-theme="light"] .transaction-modal-head h3,
+[data-theme="light"] .transaction-confirm-dialog h4,
+[data-theme="light"] .empty-state h3,
+[data-theme="light"] .report-chart-card h3,
+[data-theme="light"] .report-trend-tooltip strong,
+[data-theme="light"] .report-compare-meta strong {
+  color: #1f174b;
+}
+
+[data-theme="light"] .dashboard-topbar-pill {
+  color: #5b21b6;
+  background: rgba(168, 85, 247, 0.22);
+}
+
+[data-theme="light"] .dashboard-hero-kicker,
+[data-theme="light"] .stat-card small,
+[data-theme="light"] .category-group-card p,
+[data-theme="light"] .category-chip,
+[data-theme="light"] .ai-chip,
+[data-theme="light"] .ai-context-card span,
+[data-theme="light"] .ai-insight-summary,
+[data-theme="light"] .ai-insight-list,
+[data-theme="light"] .ai-tip-chip,
+[data-theme="light"] .ai-raw-details summary,
+[data-theme="light"] .ai-result-card pre,
+[data-theme="light"] .report-chart-note,
+[data-theme="light"] .report-donut-core span,
+[data-theme="light"] .report-donut-legend .legend-label,
+[data-theme="light"] .report-trend-item span,
+[data-theme="light"] .report-chart-empty,
+[data-theme="light"] .report-trend-tooltip p,
+[data-theme="light"] .report-compare-meta span,
+[data-theme="light"] .transaction-modal-head p,
+[data-theme="light"] .transaction-confirm-dialog p,
+[data-theme="light"] .crud-item p,
+[data-theme="light"] .empty-state p,
+[data-theme="light"] .empty-state small,
+[data-theme="light"] .page-note,
+[data-theme="light"] .mobile-transaction-note {
+  color: #5e5586;
+}
+
+[data-theme="light"] .category-chip,
+[data-theme="light"] .ai-chip,
+[data-theme="light"] .ai-tip-chip,
+[data-theme="light"] .ai-context-card,
+[data-theme="light"] .ai-result-card,
+[data-theme="light"] .ai-insight-panel,
+[data-theme="light"] .report-trend-tooltip {
+  border-color: rgba(124, 58, 237, 0.22);
+}
+
+[data-theme="light"] .category-chip,
+[data-theme="light"] .ai-chip {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="light"] .ai-chip:hover {
+  background: rgba(168, 85, 247, 0.18);
+  color: #31275e;
+}
+
+[data-theme="light"] .ai-context-card span {
+  color: #1d4ed8;
+}
+
+[data-theme="light"] .ai-tip-chip {
+  background: rgba(59, 130, 246, 0.12);
+}
+
+[data-theme="light"] .left-rail h1,
+[data-theme="light"] .nav-item.active,
+[data-theme="light"] .primary-button,
+[data-theme="light"] .crud-form button:not(.secondary-button):not(.danger-button),
+[data-theme="light"] .auth-form button {
+  color: #ffffff;
+}
+
+[data-theme="light"] .empty-state {
+  border-color: rgba(124, 58, 237, 0.24);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(247, 243, 255, 0.98) 100%);
+}
+
+[data-theme="light"] .empty-state-icon {
+  color: #5b21b6;
+  background: rgba(168, 85, 247, 0.18);
+}
+
+[data-theme="light"] .logout-button {
+  color: #b42318;
+  border-color: rgba(220, 38, 38, 0.26);
+  background: rgba(255, 245, 247, 0.95);
+}
+
+[data-theme="light"] .logout-button:hover {
+  background: rgba(254, 226, 226, 0.98);
+}
+
+[data-theme="light"] .mobile-transaction-meta span {
+  color: #6e6499;
+}
+
+[data-theme="light"] .mobile-transaction-meta strong,
+[data-theme="light"] .wallet-balance,
+[data-theme="light"] .wallet-title {
+  color: #241b52;
+}
+
+[data-theme="light"] .secondary-button {
+  border: 1px solid rgba(124, 58, 237, 0.18);
+}
+
+[data-theme="light"] .secondary-button:hover {
+  background: rgba(168, 85, 247, 0.18);
+  color: #1f174b;
+}
+
+[data-theme="light"] .type-badge-income {
+  color: #166534;
+  background: rgba(134, 239, 172, 0.34);
+  border-color: rgba(34, 197, 94, 0.45);
+}
+
+[data-theme="light"] .type-badge-expense {
+  color: #9f1239;
+  background: rgba(253, 164, 175, 0.35);
+  border-color: rgba(244, 63, 94, 0.45);
+}
+
+[data-theme="light"] .stat-card.stat-card-positive strong,
+[data-theme="light"] .report-chart-note.positive {
+  color: #15803d;
+}
+
+[data-theme="light"] .stat-card.stat-card-negative strong,
+[data-theme="light"] .report-chart-note.negative {
+  color: #be123c;
+}
+
+[data-theme="light"] .report-range-switch {
+  border-color: rgba(124, 58, 237, 0.2);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+[data-theme="light"] .report-range-switch button {
+  color: #4b3f78;
+}
+
+[data-theme="light"] .report-range-switch button.active {
+  color: #ffffff;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.94) 0%, rgba(236, 72, 153, 0.9) 100%);
+}
+
+[data-theme="light"] .report-compare-track {
+  background: rgba(124, 58, 237, 0.18);
+}
+
+[data-theme="light"] .report-donut {
+  box-shadow: inset 0 0 0 1px rgba(124, 58, 237, 0.2);
+}
+
+[data-theme="light"] .report-donut-core {
+  background: #ffffff;
+  border-color: rgba(124, 58, 237, 0.18);
+}
+
+[data-theme="light"] .report-donut-legend li.legend-positive .legend-label,
+[data-theme="light"] .report-donut-legend li.legend-positive strong,
+[data-theme="light"] .report-trend-net-row.positive,
+[data-theme="light"] .report-trend-axis.positive {
+  color: #15803d;
+}
+
+[data-theme="light"] .report-donut-legend li.legend-negative .legend-label,
+[data-theme="light"] .report-donut-legend li.legend-negative strong,
+[data-theme="light"] .report-trend-net-row.negative,
+[data-theme="light"] .report-trend-axis.negative {
+  color: #be123c;
+}
+
+[data-theme="light"] .ai-assistant-form textarea {
+  color: #2f2858;
+  border-color: rgba(124, 58, 237, 0.24);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+[data-theme="light"] .ai-assistant-form textarea::placeholder {
+  color: #7b729b;
 }
 
 @keyframes listItemIn {

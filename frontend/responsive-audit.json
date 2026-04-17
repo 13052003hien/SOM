@@ -1,0 +1,92 @@
+[
+  {
+    "viewport": "desktop-1366",
+    "route": "/dashboard",
+    "issues": []
+  },
+  {
+    "viewport": "desktop-1366",
+    "route": "/transactions",
+    "issues": []
+  },
+  {
+    "viewport": "desktop-1366",
+    "route": "/wallets",
+    "issues": []
+  },
+  {
+    "viewport": "desktop-1366",
+    "route": "/categories",
+    "issues": []
+  },
+  {
+    "viewport": "desktop-1366",
+    "route": "/reports",
+    "issues": []
+  },
+  {
+    "viewport": "desktop-1366",
+    "route": "/settings",
+    "issues": []
+  },
+  {
+    "viewport": "tablet-1024",
+    "route": "/dashboard",
+    "issues": []
+  },
+  {
+    "viewport": "tablet-1024",
+    "route": "/transactions",
+    "issues": []
+  },
+  {
+    "viewport": "tablet-1024",
+    "route": "/wallets",
+    "issues": []
+  },
+  {
+    "viewport": "tablet-1024",
+    "route": "/categories",
+    "issues": []
+  },
+  {
+    "viewport": "tablet-1024",
+    "route": "/reports",
+    "issues": []
+  },
+  {
+    "viewport": "tablet-1024",
+    "route": "/settings",
+    "issues": []
+  },
+  {
+    "viewport": "mobile-390",
+    "route": "/dashboard",
+    "issues": []
+  },
+  {
+    "viewport": "mobile-390",
+    "route": "/transactions",
+    "issues": []
+  },
+  {
+    "viewport": "mobile-390",
+    "route": "/wallets",
+    "issues": []
+  },
+  {
+    "viewport": "mobile-390",
+    "route": "/categories",
+    "issues": []
+  },
+  {
+    "viewport": "mobile-390",
+    "route": "/reports",
+    "issues": []
+  },
+  {
+    "viewport": "mobile-390",
+    "route": "/settings",
+    "issues": []
+  }
+]

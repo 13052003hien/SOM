@@ -1,4 +1,5 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { ThemeToggle } from "../components/common/ThemeToggle";
 import { authStore } from "../store/auth/auth.store";
 import { useToast } from "../store/toast/toast.store";
 
@@ -27,6 +28,7 @@ export function MainLayout() {
       <aside className="left-rail">
         <h1>SOM</h1>
         <p>Sổ tay chi tiêu thông minh</p>
+        <ThemeToggle />
         {user?.email ? <p className="auth-user">{user.email}</p> : null}
         <nav>
           {items.map((item) => (

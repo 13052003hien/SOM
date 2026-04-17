@@ -46,8 +46,8 @@ export function LoginPage() {
 
   return (
     <>
-      <h2 style={{ marginTop: 0 }}>Đăng nhập</h2>
-      <p style={{ marginTop: 0, color: "var(--muted)" }}>Đăng nhập để sử dụng hệ thống quản lý chi tiêu.</p>
+      <h2 className="auth-title">Đăng nhập</h2>
+      <p className="auth-subtitle">Đăng nhập để sử dụng hệ thống quản lý chi tiêu.</p>
 
       <form onSubmit={handleSubmit} className="auth-form">
         <label>
@@ -81,7 +81,7 @@ export function LoginPage() {
         </button>
       </form>
 
-      <p style={{ marginBottom: 0 }}>
+      <p className="auth-switch">
         Chưa có tài khoản? <Link to="/register">Đăng ký ngay</Link>
       </p>
     </>

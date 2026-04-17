@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { EmptyState } from "../../components/common/EmptyState";
 import { PageSection } from "../../components/common/PageSection";
+import { ViDateInput } from "../../components/common/ViDateInput";
 import { getCategories } from "../../services/category.service";
 import {
   createTransaction,
@@ -430,16 +431,16 @@ export function TransactionsPage() {
           </div>
 
           <div className="transaction-filter-row transaction-filter-row-secondary">
-            <input
-              type="date"
+            <ViDateInput
               value={filters.date_from}
-              onChange={(event) => updateFilter("date_from", event.target.value)}
+              onChange={(value) => updateFilter("date_from", value)}
+              placeholder="Từ ngày"
             />
 
-            <input
-              type="date"
+            <ViDateInput
               value={filters.date_to}
-              onChange={(event) => updateFilter("date_to", event.target.value)}
+              onChange={(value) => updateFilter("date_to", value)}
+              placeholder="Đến ngày"
             />
 
             <input
@@ -490,7 +491,7 @@ export function TransactionsPage() {
                         </span>
                       </td>
                       <td>{formatVND(row.amount)}</td>
-                      <td>{String(row.date).slice(0, 10)}</td>
+                      <td>{formatDisplayDate(row.date)}</td>
                       <td>{row.note}</td>
                       <td>
                         <div className="crud-item-actions">
@@ -647,11 +648,11 @@ export function TransactionsPage() {
                 <option value="income">Thu nhập</option>
               </select>
 
-              <input
-                type="date"
+              <ViDateInput
                 value={form.date}
-                onChange={(event) => setForm((prev) => ({ ...prev, date: event.target.value }))}
+                onChange={(value) => setForm((prev) => ({ ...prev, date: value }))}
                 required
+                placeholder="Ngày giao dịch"
               />
 
               <input

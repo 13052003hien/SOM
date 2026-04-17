@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { ViDateInput } from "../../components/common/ViDateInput";
 import { PageSection } from "../../components/common/PageSection";
 import { ReportCharts } from "../../components/ui/ReportCharts";
 import { StatCard } from "../../components/ui/StatCard";
@@ -124,7 +125,7 @@ export function ReportsPage() {
     <>
       <PageSection title="Bộ lọc báo cáo" subtitle="Chọn tháng để xem so sánh và dữ liệu biểu đồ">
         <form className="crud-form" onSubmit={(event) => event.preventDefault()}>
-          <input type="month" value={month} onChange={(event) => setMonth(event.target.value)} />
+          <ViDateInput mode="month" value={month} onChange={setMonth} placeholder="Chọn tháng" />
         </form>
         {error ? <p className="auth-error">{error}</p> : null}
       </PageSection>

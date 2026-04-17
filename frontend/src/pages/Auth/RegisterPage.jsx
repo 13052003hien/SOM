@@ -47,8 +47,8 @@ export function RegisterPage() {
 
   return (
     <>
-      <h2 style={{ marginTop: 0 }}>Tạo tài khoản</h2>
-      <p style={{ marginTop: 0, color: "var(--muted)" }}>Tạo tài khoản mới để bắt đầu quản lý chi tiêu.</p>
+      <h2 className="auth-title">Tạo tài khoản</h2>
+      <p className="auth-subtitle">Tạo tài khoản mới để bắt đầu quản lý chi tiêu.</p>
 
       <form onSubmit={handleSubmit} className="auth-form">
         <label>
@@ -94,7 +94,7 @@ export function RegisterPage() {
         </button>
       </form>
 
-      <p style={{ marginBottom: 0 }}>
+      <p className="auth-switch">
         Đã có tài khoản? <Link to="/login">Đăng nhập</Link>
       </p>
     </>

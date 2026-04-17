@@ -41,16 +41,16 @@ export function DashboardPage() {
       <section className="dashboard-hero">
         <div className="dashboard-hero-glow" aria-hidden="true" />
         <div className="dashboard-topbar">
-          <span className="dashboard-topbar-pill">Night mode</span>
+          <span className="dashboard-topbar-pill">Bảng điều khiển</span>
           <span className="dashboard-topbar-sep" aria-hidden="true" />
-          <span className="dashboard-topbar-text">Giao diện tối tương phản cao, tối ưu cho theo dõi dòng tiền.</span>
+          <span className="dashboard-topbar-text">{report ? `Dữ liệu kỳ ${report.month}` : "Đang cập nhật dữ liệu"}</span>
         </div>
         <div className="dashboard-hero-content">
           <div>
-            <p className="dashboard-hero-kicker">WELCOME BACK</p>
+            <p className="dashboard-hero-kicker">QUẢN LÝ TÀI CHÍNH THÔNG MINH</p>
             <h1>Tổng quan tài chính</h1>
             <p>
-              Theo dõi thu nhập, chi tiêu và cảnh báo ngân sách trong một không gian tối phong cách club.
+              Theo dõi thu nhập, chi tiêu và cảnh báo ngân sách theo thời gian thực.
             </p>
           </div>
           <div className="dashboard-hero-meta">
@@ -66,15 +66,6 @@ export function DashboardPage() {
             <StatCard key={item.label} label={item.label} value={item.value} helper={item.helper} />
           ))}
         </div>
-      </PageSection>
-
-      <PageSection title="Trạng thái hệ thống" subtitle="Thông tin kết nối nhanh">
-        {error ? <p>{error}</p> : <p>Backend đã kết nối.</p>}
-        {!error && report?.budget ? (
-          <p>
-            Cảnh báo ngân sách: {report.budget.exceededBudgets} / {report.budget.totalBudgets}
-          </p>
-        ) : null}
       </PageSection>
     </>
   );
