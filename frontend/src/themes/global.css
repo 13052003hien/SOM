@@ -1133,20 +1133,35 @@ body {
   color: #f8fafc;
 }
 
-.crud-form select option {
-  color: #0f172a;
-  background: #f8fafc;
+.crud-form select option,
+.transaction-filter-panel select option {
+  color: #e2e8f0;
+  background: #1e293b;
 }
 
-.crud-form select optgroup {
-  color: #0f172a;
-  background: #f8fafc;
+.crud-form select optgroup,
+.transaction-filter-panel select optgroup {
+  color: #e2e8f0;
+  background: #1e293b;
 }
 
 .crud-form select option:checked,
-.crud-form select option:hover {
-  background: #e9d5ff;
-  color: #0f172a;
+.crud-form select option:hover,
+.transaction-filter-panel select option:checked,
+.transaction-filter-panel select option:hover {
+  background: #334155;
+  color: #f8fafc;
+}
+
+.transaction-filter-panel select option,
+.transaction-filter-panel select optgroup {
+  color: #e2e8f0 !important;
+  background: #1e293b !important;
+}
+
+.crud-form select,
+.transaction-filter-panel select {
+  color-scheme: dark;
 }
 
 .crud-form input:focus,
@@ -2116,6 +2131,31 @@ body {
   color: #2f2858;
   border-color: rgba(124, 58, 237, 0.2);
   background: rgba(255, 255, 255, 0.92);
+}
+
+[data-theme="light"] .crud-form select option,
+[data-theme="light"] .transaction-filter-panel select option {
+  color: #1f174b;
+  background: #ffffff;
+}
+
+[data-theme="light"] .crud-form select optgroup,
+[data-theme="light"] .transaction-filter-panel select optgroup {
+  color: #1f174b;
+  background: #ffffff;
+}
+
+[data-theme="light"] .crud-form select option:checked,
+[data-theme="light"] .crud-form select option:hover,
+[data-theme="light"] .transaction-filter-panel select option:checked,
+[data-theme="light"] .transaction-filter-panel select option:hover {
+  background: #e9d5ff;
+  color: #1f174b;
+}
+
+[data-theme="light"] .crud-form select,
+[data-theme="light"] .transaction-filter-panel select {
+  color-scheme: light;
 }
 
 [data-theme="light"] .crud-form input::placeholder,
